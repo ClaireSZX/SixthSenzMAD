@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.homepage.HomeFragment"
+        android:label="MainActivity" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.homepage.ProfileFragment"
+        android:label="Profile" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.homepage.ChatFragment"
+        android:label="Chat" />
+
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.homepage.TrainingFragment"
+        android:label="Training" />
+
+    <!-- Add PostsFragment (the "other page" where posts can be created) -->
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="com.example.homepage.PostFragment"
+        android:label="Posts" />
+</navigation>
