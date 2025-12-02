@@ -2,16 +2,23 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+val nav_version = "2.5.3"
+val room_version = "2.6.1"
+
 android {
     namespace = "com.example.homepage"
     compileSdk {
         version = release(36)
     }
+    namespace = "com.example.madproject"
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.homepage"
+        applicationId = "com.example.madproject"
         minSdk = 24
         targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -31,6 +38,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    // This part is important for XML ViewBinding
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -44,4 +55,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // Dependencies for Navigation Component
+    implementation("androidx.navigation:navigation-fragment:$nav_version")
+    implementation("androidx.navigation:navigation-ui:$nav_version")
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version") // 这是代码生成器
 }
+

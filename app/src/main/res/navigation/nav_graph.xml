@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
@@ -29,4 +30,59 @@
         android:id="@+id/postsFragment"
         android:name="com.example.homepage.PostFragment"
         android:label="Posts" />
+
+    <fragment
+        android:id="@+id/userTypeSelectionFragment"
+        android:name="com.example.madproject.UserTypeSelectionFragment"
+        android:label="fragment_user_type_selection"
+        tools:layout="@layout/fragment_user_type_selection" >
+        <action
+            android:id="@+id/action_userTypeSelectionFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.madproject.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.madproject.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_appActivity"
+            app:destination="@id/appActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.madproject.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile_employee" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+
+    <!-- Edit Profile Fragment Destination -->
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.madproject.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_employee_profile" />
+
+    <activity
+        android:id="@+id/appActivity"
+        android:name="com.example.madproject.AppActivity"
+        android:label="activity_app"
+        tools:layout="@layout/activity_app" />
+
 </navigation>
+
