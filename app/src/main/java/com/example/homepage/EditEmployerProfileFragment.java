@@ -1,4 +1,4 @@
-package com.example.madproject;
+package com.example.homepage;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.madproject.AppDatabase;
+import com.example.madproject.R;
+import com.example.madproject.User;
+
 public class EditEmployerProfileFragment extends Fragment {
 
-    private int userId;
+    private String userEmail;
     private EditText editTextCompanyName, editTextAbout, editTextSize, editTextIndustry, editTextEmail, editTextLocation;
 
     @Nullable
@@ -31,7 +35,7 @@ public class EditEmployerProfileFragment extends Fragment {
 
         // 从 arguments 获取 userId，并预填充数据
         if (getArguments() != null) {
-            userId = getArguments().getInt("userId", -1);
+            userEmail = getArguments().getString("userEmail", null);
             Bundle args = getArguments();
             editTextCompanyName.setText(args.getString("name"));
             editTextAbout.setText(args.getString("about"));
@@ -45,12 +49,12 @@ public class EditEmployerProfileFragment extends Fragment {
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
 
         buttonSave.setOnClickListener(v -> {
-            if (userId == -1) return;
+            if (userEmail == null) return;
 
             // 在后台线程中更新数据库
             new Thread(() -> {
                 AppDatabase db = AppDatabase.getDatabase(getContext().getApplicationContext());
-                User userToUpdate = db.userDao().findById(userId);
+                User userToUpdate = db.userDao().findByEmail(userEmail);
 
                 if (userToUpdate != null) {
                     // 从EditText获取新数据并更新User对象

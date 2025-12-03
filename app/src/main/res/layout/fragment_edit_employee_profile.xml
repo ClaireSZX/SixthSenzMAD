@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brand_off_white"
-    tools:context=".EditEmployeeProfileFragment">
+    tools:context="com.example.homepage.EditEmployeeProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

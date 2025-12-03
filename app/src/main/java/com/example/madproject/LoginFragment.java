@@ -2,6 +2,7 @@ package com.example.madproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.homepage.MainActivity;
+import com.example.homepage.ProfileFragment;
+
 public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_login, container, false);
+
     }
 
     @Override
@@ -45,8 +50,8 @@ public class LoginFragment extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         if (user != null && user.password.equals(password)) {
                             Toast.makeText(getContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), AppActivity.class);
-                            intent.putExtra("userId", user.id);
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            intent.putExtra("userEmail", user.email);
                             startActivity(intent);
                             getActivity().finish();
                         } else {

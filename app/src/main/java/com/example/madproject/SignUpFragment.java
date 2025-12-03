@@ -1,6 +1,12 @@
 package com.example.madproject;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +21,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-// ✅ 导入 TextInputLayout
+import com.example.homepage.MainActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SignUpFragment extends Fragment {
 
-    private String userType;
+    private String userType = "user"; // default type
     private EditText editTextName, editTextEmail, editTextPassword;
-
-    // ✅ 声明一个新的变量来引用 TextInputLayout
     private TextInputLayout textInputLayoutName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userType = getArguments().getString("userType");
+            userType = getArguments().getString("userType", "user");
         }
     }
 
@@ -43,27 +47,18 @@ public class SignUpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // ✅ 在 XML 中，EditText 是被 TextInputLayout 包裹的，所以我们需要获取到这个父布局
-        // 我们需要给 TextInputLayout 在 XML 中一个 ID
         textInputLayoutName = view.findViewById(R.id.textInputLayoutName);
-
         editTextName = view.findViewById(R.id.editTextName);
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
         Button buttonSignUp = view.findViewById(R.id.buttonSignUp);
-        TextView loginLink = view.findViewById(R.id.textViewLoginLink);
-        NavController navController = Navigation.findNavController(view);
 
-        // ✅ 关键修正：修改 TextInputLayout 的 hint，而不是 EditText 的
+        // Adjust hint based on user type
         if ("employer".equals(userType)) {
             textInputLayoutName.setHint("Company Name");
         } else {
             textInputLayoutName.setHint("Full Name");
         }
-
-        loginLink.setOnClickListener(v -> {
-            navController.navigate(R.id.action_signUpFragment_to_loginFragment);
-        });
 
         buttonSignUp.setOnClickListener(v -> {
             String name = editTextName.getText().toString().trim();
@@ -85,20 +80,53 @@ public class SignUpFragment extends Fragment {
                 newUser.fullName = name;
             }
 
+            // Insert user in background
             new Thread(() -> {
                 AppDatabase db = AppDatabase.getDatabase(getContext());
                 db.userDao().insert(newUser);
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         Toast.makeText(getContext(), "Sign Up Successful!", Toast.LENGTH_SHORT).show();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("email", email);
-                        navController.navigate(R.id.action_signUpFragment_to_loginFragment, bundle);
+
+                        // Launch MainActivity after signup
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.putExtra("email", email); // optional: pass user data
+                        startActivity(intent);
+
+                        // Close SignupActivity so user can't go back
+                        getActivity().finish();
                     });
                 }
             }).start();
         });
+
+        // ---------- Login text (partial clickable) ----------
+        TextView loginSentence = view.findViewById(R.id.textViewLoginSentence);
+        String text = "Already have an account? Login";
+        SpannableString spannableString = new SpannableString(text);
+
+        int start = text.indexOf("Login");
+        int end = start + "Login".length();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                // Navigate to LoginFragment
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.action_signUpFragment_to_loginFragment);
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.brand_navy_blue));
+                ds.setUnderlineText(true);
+            }
+        };
+
+        spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        loginSentence.setText(spannableString);
+        loginSentence.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
-
-

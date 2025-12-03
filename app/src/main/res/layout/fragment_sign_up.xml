@@ -81,13 +81,12 @@
         android:text="Sign Up"/>
 
     <TextView
-        android:id="@+id/textViewLoginLink"
+        android:id="@+id/textViewLoginSentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Already have an account? Login"
-        android:textColor="@color/brand_slate_gray"
-        android:textSize="16sp"/>
+        android:textColor="@color/brand_navy_blue"
+        android:textSize="14sp"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
 

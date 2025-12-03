@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id = "@+id/main"
+    android:orientation="vertical">
 
     <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="207dp"
-        android:background="@color/HomePageBlue"
+        android:layout_height="168dp"
+        android:background="@color/brand_navy_blue"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="24dp"
-        android:paddingRight="16dp">
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp">
 
         <TextView
             android:id="@+id/JobMatch"
@@ -25,7 +25,7 @@
             android:text="JobMatch"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="70sp"
+            android:textSize="50sp"
             android:textStyle="normal" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -38,64 +38,54 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:background="@drawable/rounded_search"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <EditText
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
                     android:hint="Hinted search text"
                     android:singleLine="true"
-                    android:textColor="@color/HomePageBlue"
-                    android:textColorHint="@color/HomePageBlue"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/brand_navy_blue"
+                    android:textColorHint="@color/brand_navy_blue"
                     android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/searchIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="43dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@android:drawable/ic_menu_search" />
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
             </RelativeLayout>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
-    <!-- Navigation Host Fragment -->
+    <!-- Fragment Container fills remaining space -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="207dp"
-        android:layout_marginBottom="56dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/nav_graph_home" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_height="80dp"
+        app:labelVisibilityMode="selected"
         android:background="#44546A"
         app:itemTextColor="#FFFFFF"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        android:tint = "#FFFFFF"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

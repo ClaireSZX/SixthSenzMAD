@@ -3,33 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
-
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.homepage.HomeFragment"
-        android:label="MainActivity" />
-
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.homepage.ProfileFragment"
-        android:label="Profile" />
-
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.homepage.ChatFragment"
-        android:label="Chat" />
-
-    <fragment
-        android:id="@+id/trainingFragment"
-        android:name="com.example.homepage.TrainingFragment"
-        android:label="Training" />
-
-    <!-- Add PostsFragment (the "other page" where posts can be created) -->
-    <fragment
-        android:id="@+id/postsFragment"
-        android:name="com.example.homepage.PostFragment"
-        android:label="Posts" />
+    app:startDestination="@id/userTypeSelectionFragment">
 
     <fragment
         android:id="@+id/userTypeSelectionFragment"
@@ -63,7 +37,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.madproject.ProfileFragment"
+        android:name="com.example.homepage.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile_employee" >
         <action
@@ -74,7 +48,7 @@
     <!-- Edit Profile Fragment Destination -->
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.madproject.EditProfileFragment"
+        android:name="com.example.homepage.EditEmployeeProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_employee_profile" />
 
