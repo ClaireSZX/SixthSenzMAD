@@ -15,4 +15,7 @@
     <color name="brand_light_blue">#AAC7D8</color>  <!-- 这里的 'C' 是正确的英文字母 -->
     <color name="brand_powder_blue">#DFEBF6</color> <!-- 淡蓝色，用于卡片背景 -->
     <color name="brand_off_white">#E6E6E6</color>  <!-- 米白色，用于主背景 -->
+
+    <color name="colorPrimary">#768A96</color>
+    <color name="colorSecondary">#AAC7D8</color>
 </resources>

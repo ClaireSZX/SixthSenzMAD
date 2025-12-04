@@ -24,6 +24,14 @@
         <activity
             android:name="com.example.homepage.MainActivity"
             android:exported="true" />
+
+        <activity
+            android:name="com.example.chatlist.ChatBox"
+            android:exported="true" />
+
+        <activity
+            android:name="com.example.chatlist.adminChat"
+            android:exported="true" />
     </application>
 
 

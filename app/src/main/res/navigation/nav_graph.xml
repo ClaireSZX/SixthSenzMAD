@@ -56,7 +56,7 @@
         android:id="@+id/appActivity"
         android:name="com.example.madproject.AppActivity"
         android:label="activity_app"
-        tools:layout="@layout/activity_app" />
+        tools:layout="@layout/activity_app_profile" />
 
 </navigation>
 
