@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Module5</string>
+    <string name="course_thumbnail_desc">Thumbnail image for the training course.</string>
+    <string name="add_new_post">Add a new forum post</string>
+</resources>

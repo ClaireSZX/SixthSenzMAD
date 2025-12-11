@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/frosted_background_white"
+    tools:context=".activities.PostDetailActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_post_detail"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:title="Post Details"
+                android:titleTextColor="@android:color/white"
+                app:navigationIcon="@drawable/ic_back"/>
+
+            <TextView
+                android:id="@+id/text_post_detail_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/frosted_primary_dark"
+                android:paddingBottom="4dp"
+                tools:text="Community Member Name" />
+
+            <TextView
+                android:id="@+id/text_post_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/frosted_primary"
+                android:paddingBottom="16dp"
+                tools:text="This is the full, detailed content of the forum post that the user clicked on, which may be quite long." />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/frosted_medium_gray"
+                android:layout_marginVertical="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comments"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/frosted_primary_dark"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_comment" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="@color/frosted_background_light"
+        android:elevation="8dp">
+
+        <EditText
+            android:id="@+id/edit_text_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Add a comment..."
+            android:minHeight="48dp"
+            android:background="@drawable/rounded_edit_text"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/frosted_primary_dark"
+            android:textColorHint="@color/frosted_medium_gray"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/button_post_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Post"
+            android:textColor="@color/frosted_background_white"
+            android:backgroundTint="@color/frosted_accent"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:minHeight="48dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
