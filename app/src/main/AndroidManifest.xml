@@ -32,7 +32,22 @@
         <activity
             android:name="com.example.chatlist.adminChat"
             android:exported="true" />
+
+        <activity
+            android:name="com.example.training.ActivityCourseDetail"
+            android:exported="true" />
+
+        <activity
+            android:name="com.example.training.ForumActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.training.NewPostActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.training.CommentActivity"
+            android:exported="true" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>
