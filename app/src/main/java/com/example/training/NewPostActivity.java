@@ -1,6 +1,5 @@
 package com.example.training;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.AppDatabase;
 import com.example.madproject.R;
 
 public class NewPostActivity extends AppCompatActivity {
@@ -21,38 +21,55 @@ public class NewPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
 
-        // Setup Toolbar
+        // ───────── Toolbar ─────────
         Toolbar toolbar = findViewById(R.id.toolbar_new_post);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(v -> finish()); // Back button
+        toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Initialize views
+        // ───────── Views ─────────
         editTextPostContent = findViewById(R.id.edit_text_post_content);
         buttonSubmitPost = findViewById(R.id.button_submit_post);
 
-        // Handle submit click
+        // Get course ID from ForumActivity
+        String courseId = getIntent().getStringExtra("course_id");
+
+        // ───────── Submit Post ─────────
         buttonSubmitPost.setOnClickListener(v -> {
             String content = editTextPostContent.getText().toString().trim();
 
             if (content.isEmpty()) {
-                Toast.makeText(NewPostActivity.this, "Post cannot be empty!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Post cannot be empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Send result back to ForumActivity
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("new_post_id", String.valueOf(System.currentTimeMillis()));
-            resultIntent.putExtra("new_post_author", "Student"); // or dynamic author
-            resultIntent.putExtra("new_post_content", content);
-            resultIntent.putExtra("new_post_timestamp", System.currentTimeMillis());
-            resultIntent.putExtra("new_post_comment_count", 0);
+            if (courseId == null) {
+                Toast.makeText(this, "Course not found!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            new Thread(() -> {
+                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+
+                ForumPost post = new ForumPost(
+                        String.valueOf(System.currentTimeMillis()), // postId
+                        courseId,                                  // courseId
+                        "Student",                                 // author (can be dynamic later)
+                        content,                                   // content
+                        System.currentTimeMillis(),                // timestamp
+                        0                                          // commentCount
+                );
+
+                db.forumPostDao().insert(post);
+
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Post added", Toast.LENGTH_SHORT).show();
+                    finish(); // LiveData will auto-update ForumActivity
+                });
+            }).start();
         });
     }
 }

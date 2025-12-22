@@ -30,5 +30,9 @@ public class User {
 
     // Room 需要一个空的构造函数
     public User() {}
+
+    public String getEmail() {
+        return this.email;
+    }
 }
 

@@ -10,10 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.madproject.AppDatabase;
+import com.example.AppDatabase;
 import com.example.madproject.R;
 import com.example.madproject.User;
 import com.google.android.material.card.MaterialCardView;
@@ -50,19 +49,7 @@ public class ProfileFragment extends Fragment {
 
         // Listen for updates from edit fragments
         getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-            if (userEmail != null && getContext() != null) {
-                new Thread(() -> {
-                    AppDatabase db = AppDatabase.getDatabase(getContext().getApplicationContext());
-                    User user = db.userDao().findByEmail(userEmail);
-                    currentUser = user;
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            updateProfileUI(user);
-                            checkIncompleteProfile();
-                        });
-                    }
-                }).start();
-            }
+            reloadUser();
         });
     }
 
@@ -119,7 +106,6 @@ public class ProfileFragment extends Fragment {
         }).start();
     }
 
-
     private void onRealViewCreated(View view, User user) {
         initializeViews(view);
 
@@ -175,33 +161,26 @@ public class ProfileFragment extends Fragment {
         if (user == null) return;
 
         if ("employer".equals(userType)) {
-            // Company info
             textViewCompanyName.setText(!isEmpty(user.companyName) ? user.companyName : "Not provided yet");
             textViewCompanyEmail.setText(!isEmpty(user.email) ? user.email : "Not provided yet");
             textViewLocation.setText(!isEmpty(user.location) ? user.location : "Not provided yet");
 
-            // Company details cards
             textViewAboutCompany.setText(!isEmpty(user.aboutCompany) ? user.aboutCompany : "Not provided yet");
             textViewCompanySize.setText(!isEmpty(user.companySize) ? user.companySize : "Not provided yet");
             textViewIndustry.setText(!isEmpty(user.industry) ? user.industry : "Not provided yet");
 
-            // Always show cards
             cardAbout.setVisibility(View.VISIBLE);
             cardSize.setVisibility(View.VISIBLE);
             cardIndustry.setVisibility(View.VISIBLE);
-
         } else {
-            // Personal info
             textViewName.setText(!isEmpty(user.fullName) ? user.fullName : "Not provided yet");
             textViewEmail.setText(!isEmpty(user.email) ? user.email : "Not provided yet");
             textViewPhone.setText(!isEmpty(user.phone) ? user.phone : "Not provided yet");
 
-            // Employee cards
             textViewWorkingExperience.setText(!isEmpty(user.workingExperience) ? user.workingExperience : "Not provided yet");
             textViewSkills.setText(!isEmpty(user.skills) ? user.skills : "Not provided yet");
             textViewLanguage.setText(!isEmpty(user.language) ? user.language : "Not provided yet");
 
-            // Always show cards
             cardExperience.setVisibility(View.VISIBLE);
             cardSkills.setVisibility(View.VISIBLE);
             cardLanguage.setVisibility(View.VISIBLE);
@@ -209,6 +188,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void checkIncompleteProfile() {
+        if (currentUser == null) return;
+
         boolean incomplete = false;
 
         if ("employer".equals(currentUser.userType)) {
@@ -255,9 +236,27 @@ public class ProfileFragment extends Fragment {
         }
         return bundle;
     }
+
+    // Reload user safely from DB
+    private void reloadUser() {
+        if (userEmail == null || getContext() == null) return;
+
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(getContext().getApplicationContext());
+            User user = db.userDao().findByEmail(userEmail);
+            currentUser = user;
+            if (getActivity() != null && user != null) {
+                getActivity().runOnUiThread(() -> {
+                    updateProfileUI(user);
+                    checkIncompleteProfile();
+                });
+            }
+        }).start();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        reloadUser();
+    }
 }
-
-
-
-
-

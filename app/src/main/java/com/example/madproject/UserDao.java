@@ -1,5 +1,6 @@
 package com.example.madproject;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -13,6 +14,9 @@ public interface UserDao {
     void insert(User user);
 
     // 根据邮箱查找用户 (用于登录验证)
+    @Query("SELECT * FROM user_table WHERE email = :email COLLATE NOCASE AND password = :password LIMIT 1")
+    User login(String email, String password);
+
     @Query("SELECT * FROM user_table WHERE email = :email LIMIT 1")
     User findByEmail(String email);
 
@@ -24,6 +28,10 @@ public interface UserDao {
     // 更新一个已存在的用户信息 (用于保存编辑后的资料)
     @Update
     void update(User user);
+
+    @Query("SELECT * FROM user_table WHERE id = :id")
+    LiveData<User> getUserLiveData(int id);
+
 }
 
 

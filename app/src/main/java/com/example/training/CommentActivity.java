@@ -1,20 +1,21 @@
 package com.example.training;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.AppDatabase;
 import com.example.madproject.R;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CommentActivity extends AppCompatActivity {
 
@@ -23,11 +24,15 @@ public class CommentActivity extends AppCompatActivity {
     private EditText editTextComment;
     private Button buttonPost;
 
+    private AppDatabase db;
+    private String postId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_activity);
 
+        // ───────── Toolbar ─────────
         Toolbar toolbar = findViewById(R.id.toolbar_post_detail);
         setSupportActionBar(toolbar);
 
@@ -38,41 +43,72 @@ public class CommentActivity extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> finish());
 
+        // ───────── Post details ─────────
         TextView tvAuthor = findViewById(R.id.text_post_detail_author);
         TextView tvContent = findViewById(R.id.text_post_detail_content);
 
         String author = getIntent().getStringExtra("post_author");
         String content = getIntent().getStringExtra("post_content");
-        String postId = getIntent().getStringExtra("post_id");
+        postId = getIntent().getStringExtra("post_id");
 
         tvAuthor.setText(author);
         tvContent.setText(content);
 
+        if (postId == null) {
+            Toast.makeText(this, "Post not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // ───────── RecyclerView ─────────
         recyclerView = findViewById(R.id.recycler_view_comments);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CommentAdapter(new ArrayList<>());
+        adapter = new CommentAdapter();
         recyclerView.setAdapter(adapter);
 
+        // ───────── Database ─────────
+        db = AppDatabase.getDatabase(this);
+
+        // Observe comments for this post
+        db.CommentDao()
+                .getCommentsForPost(postId)
+                .observe(this, comments -> {
+                    adapter.setComments(comments);
+                    recyclerView.scrollToPosition(
+                            Math.max(comments.size() - 1, 0)
+                    );
+                });
+
+        // ───────── Input ─────────
         editTextComment = findViewById(R.id.edit_text_comment);
         buttonPost = findViewById(R.id.button_post_comment);
 
         buttonPost.setOnClickListener(v -> {
             String commentText = editTextComment.getText().toString().trim();
-            if (!commentText.isEmpty()) {
-                Comment comment = new Comment(commentText, "Student");
-                adapter.addComment(comment);
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-                editTextComment.setText("");
+            if (commentText.isEmpty()) return;
 
-                // Return to ForumActivity
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("post_id", postId);
-                resultIntent.putExtra("comment_author", comment.getAuthor());
-                resultIntent.putExtra("comment_content", comment.getContent());
-                setResult(RESULT_OK, resultIntent);
-            }
+            Comment comment = new Comment(
+                    postId,
+                    "You",
+                    commentText,
+                    System.currentTimeMillis()
+            );
+
+            new Thread(() -> {
+                // Insert comment
+                db.CommentDao().insert(comment);
+
+                // Increment comment count in ForumPost
+                ForumPost post = db.forumPostDao().findPostById(postId);
+                if (post != null) {
+                    post.setCommentCount(post.getCommentCount() + 1);
+                    db.forumPostDao().update(post);
+                }
+            }).start();
+
+            editTextComment.setText("");
         });
+
     }
+
 }
-
-

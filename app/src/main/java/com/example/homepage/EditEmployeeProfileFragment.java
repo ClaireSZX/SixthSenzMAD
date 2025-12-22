@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.madproject.AppDatabase;
+import com.example.AppDatabase;
 import com.example.madproject.R;
 import com.example.madproject.User;
 

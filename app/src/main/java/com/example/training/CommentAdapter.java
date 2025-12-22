@@ -10,15 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.madproject.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
-    private List<Comment> commentList;
-
-    public CommentAdapter(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
+    private final List<Comment> commentList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -36,19 +33,27 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
     @Override
-    public int getItemCount() { return commentList.size(); }
+    public int getItemCount() {
+        return commentList.size();
+    }
+
+    // ✅ REQUIRED for Room + LiveData
+    public void setComments(List<Comment> comments) {
+        commentList.clear();
+        if (comments != null) {
+            commentList.addAll(comments);
+        }
+        notifyDataSetChanged();
+    }
+
 
     static class CommentViewHolder extends RecyclerView.ViewHolder {
         TextView author, content;
+
         CommentViewHolder(@NonNull View itemView) {
             super(itemView);
             author = itemView.findViewById(R.id.commentAuthor);
             content = itemView.findViewById(R.id.commentContent);
         }
-    }
-
-    public void addComment(Comment comment) {
-        commentList.add(comment);
-        notifyItemInserted(commentList.size() - 1);
     }
 }

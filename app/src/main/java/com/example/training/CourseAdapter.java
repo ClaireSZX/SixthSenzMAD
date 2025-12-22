@@ -42,6 +42,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         // Card click opens details
         holder.courseCard.setOnClickListener(v -> {
             Intent intent = new Intent(context, ActivityCourseDetail.class);
+            intent.putExtra("course_id", course.getId());
             intent.putExtra("title", course.getTitle());
             intent.putExtra("content_url", course.getContentUrl());
             context.startActivity(intent);

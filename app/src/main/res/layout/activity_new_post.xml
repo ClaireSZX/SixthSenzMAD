@@ -9,14 +9,14 @@
     tools:context="com.example.training.NewPostActivity">
 
     <!-- Custom Toolbar -->
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_new_post"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/brand_navy_blue"
-        android:title="@string/add_new_post"
-        android:titleTextColor="@android:color/white"
-        app:navigationIcon="@drawable/ic_back"/>
+        app:titleTextColor="@android:color/white"
+        app:navigationIconTint="@android:color/white"
+        app:title="New Post" />
 
     <!-- Instruction -->
     <TextView

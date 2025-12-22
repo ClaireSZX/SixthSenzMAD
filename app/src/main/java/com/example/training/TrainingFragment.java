@@ -24,6 +24,7 @@ public class TrainingFragment extends Fragment {
     private RecyclerView recyclerView;
     private CourseAdapter adapter;
     private List<Course> courseList;
+    private Course course;
 
     private Context context;
 
@@ -44,16 +45,12 @@ public class TrainingFragment extends Fragment {
         adapter = new CourseAdapter(getContext(), courseList);
         recyclerView.setAdapter(adapter);
 
-        Button goToForumButton = view.findViewById(R.id.goToForumButton);
-        goToForumButton.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), ForumActivity.class);
-            v.getContext().startActivity(intent);
-        });
+
         return view;
     }
 
     private void loadSampleCourses() {
-        courseList.add(new Course("1", "Interview Skills", "Career", "10 min", "https://www.youtube.com/watch?v=ZU9x1vFx5lI"));
-        courseList.add(new Course("2", "Workplace Safety", "Safety", "15 min", "https://example.com/safety"));
+        courseList.add(new Course("course1", "Interview Skills", "Career", "10 min", "https://www.youtube.com/watch?v=ZU9x1vFx5lI"));
+        courseList.add(new Course("course2", "Workplace Safety", "Safety", "15 min", "https://example.com/safety"));
     }
 }

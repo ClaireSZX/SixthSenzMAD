@@ -1,5 +1,6 @@
 package com.example.training;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,18 +10,17 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.madproject.R;
 
 public class ActivityCourseDetail extends AppCompatActivity {
 
-    private TextView textDetailTitle;
     private ProgressBar progressBarContent;
     private WebView webViewCourseContent;
 
@@ -29,10 +29,32 @@ public class ActivityCourseDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
-        textDetailTitle = findViewById(R.id.text_detail_title);
+        // Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_course_detail);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        // Views
         progressBarContent = findViewById(R.id.progress_bar_content);
         webViewCourseContent = findViewById(R.id.web_view_course_content);
+        Button goToForumButton = findViewById(R.id.goToForumButton);
 
+        // Intent data
+        String courseTitle = getIntent().getStringExtra("title");
+        String contentUrl = getIntent().getStringExtra("content_url");
+        String courseId = getIntent().getStringExtra("course_id");
+
+        // Set toolbar title from course card
+        if (courseTitle != null && getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(courseTitle);
+        }
+
+        // WebView settings
         WebSettings settings = webViewCourseContent.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -57,22 +79,17 @@ public class ActivityCourseDetail extends AppCompatActivity {
             }
         });
 
-        // Get data from Intent
-        String title = getIntent().getStringExtra("title");
-        String contentUrl = getIntent().getStringExtra("content_url"); // URL of course content
-
-        if (title != null) {
-            textDetailTitle.setText(title);
-        }
-
         if (contentUrl != null) {
             webViewCourseContent.loadUrl(contentUrl);
         }
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(v -> {
-            finish();
+        goToForumButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ActivityCourseDetail.this, ForumActivity.class);
+            intent.putExtra("course_id", courseId);
+            intent.putExtra("course_title", courseTitle);
+
+            startActivity(intent);
         });
     }
 
