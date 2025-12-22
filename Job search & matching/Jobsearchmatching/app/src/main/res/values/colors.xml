@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Primary palette -->
+    <color name="primary_dark">#29353C</color>
+    <color name="primary">#44576D</color>
+    <color name="secondary">#768A96</color>
+    <color name="accent_light">#AAC7D8</color>
+    <color name="background_light">#DFEBF6</color>
+    <color name="surface">#E6E6E6</color>
+
+    <!-- Text -->
+    <color name="text_primary">#29353C</color>
+    <color name="text_secondary">#44576D</color>
+
+</resources>
