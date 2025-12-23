@@ -47,7 +47,7 @@ public class ActivityCourseDetail extends AppCompatActivity {
         // Intent data
         String courseTitle = getIntent().getStringExtra("title");
         String contentUrl = getIntent().getStringExtra("content_url");
-        String courseId = getIntent().getStringExtra("course_id");
+        int courseId = getIntent().getIntExtra("course_id",0);
 
         // Set toolbar title from course card
         if (courseTitle != null && getSupportActionBar() != null) {

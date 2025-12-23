@@ -14,9 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.AppDatabase;
 import com.example.madproject.R;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class CommentActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -47,11 +44,11 @@ public class CommentActivity extends AppCompatActivity {
         TextView tvAuthor = findViewById(R.id.text_post_detail_author);
         TextView tvContent = findViewById(R.id.text_post_detail_content);
 
-        String author = getIntent().getStringExtra("post_author");
+        String sampleAuthor = getIntent().getStringExtra("post_author");
         String content = getIntent().getStringExtra("post_content");
         postId = getIntent().getStringExtra("post_id");
 
-        tvAuthor.setText(author);
+        tvAuthor.setText(sampleAuthor);
         tvContent.setText(content);
 
         if (postId == null) {
@@ -87,9 +84,12 @@ public class CommentActivity extends AppCompatActivity {
             String commentText = editTextComment.getText().toString().trim();
             if (commentText.isEmpty()) return;
 
+            String author = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getString("username", "Unknown User");
+
             Comment comment = new Comment(
                     postId,
-                    "You",
+                    author,
                     commentText,
                     System.currentTimeMillis()
             );
@@ -110,5 +110,4 @@ public class CommentActivity extends AppCompatActivity {
         });
 
     }
-
 }

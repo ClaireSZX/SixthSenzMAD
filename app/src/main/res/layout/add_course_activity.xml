@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Screen Title -->
+            <TextView
+                android:id="@+id/tvAddCourseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:text="Add New Course"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Course Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course Title"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:hint="e.g. Interview Skills"
+                android:inputType="text" />
+
+            <!-- Category -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etCategory"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:hint="e.g. Career, Safety"
+                android:inputType="text" />
+
+            <!-- Duration -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Duration"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etDuration"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:hint="e.g. 10 min"
+                android:inputType="text" />
+
+            <!-- Content URL -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course Content URL"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etContentUrl"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="24dp"
+                android:hint="https://youtube.com/..."
+                android:inputType="textUri" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btnSaveCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Course"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/brand_navy_blue"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
