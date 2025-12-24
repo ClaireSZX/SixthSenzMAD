@@ -7,14 +7,14 @@ import androidx.room.PrimaryKey;
 public class ForumPost {
     @PrimaryKey
     @NonNull private String postId;
-    private String courseId;
+    private int courseId;
     private String author;
     private String content;
     private long timestamp;
     private int commentCount;
 
 
-    public ForumPost(@NonNull String postId, String courseId, String author, String content, long timestamp, int commentCount) {
+    public ForumPost(@NonNull String postId, int courseId, String author, String content, long timestamp, int commentCount) {
         this.postId = postId;
         this.courseId = courseId;
         this.author = author;
@@ -30,5 +30,5 @@ public class ForumPost {
     public int getCommentCount() { return commentCount; }
 
     public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
-    public String getCourseId() { return courseId; }
+    public int getCourseId() { return courseId; }
 }

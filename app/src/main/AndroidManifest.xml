@@ -46,6 +46,9 @@
         <activity
             android:name="com.example.training.CommentActivity"
             android:exported="true" />
+        <activity
+            android:name="com.example.training.AddCourseActivity"
+            android:exported="true" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

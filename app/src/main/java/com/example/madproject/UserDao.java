@@ -32,6 +32,9 @@ public interface UserDao {
     @Query("SELECT * FROM user_table WHERE id = :id")
     LiveData<User> getUserLiveData(int id);
 
+    @Query("SELECT * FROM user_table WHERE email = :email LIMIT 1")
+    LiveData<User> getUserByEmail(String email);
+
 }
 
 

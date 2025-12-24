@@ -34,5 +34,17 @@ public class User {
     public String getEmail() {
         return this.email;
     }
+
+    public String getUserType(){
+        return this.userType;
+    }
+
+    public String getName() {
+        if(userType.equals("employee")) {
+            return fullName;
+        } else {
+            return companyName;
+        }
+    }
 }
 

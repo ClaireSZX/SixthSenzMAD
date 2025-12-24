@@ -17,10 +17,10 @@ public interface ForumPostDao {
 
     // Get all posts for a specific course, newest first
     @Query("SELECT * FROM forum_posts WHERE courseId = :courseId COLLATE NOCASE ORDER BY timestamp DESC")
-    LiveData<List<ForumPost>> getPostsForCourse(String courseId);
+    LiveData<List<ForumPost>> getPostsForCourse(int courseId);
 
     @Query("SELECT COUNT(*) FROM forum_posts WHERE courseId = :courseId")
-    int countPostsForCourse(String courseId);
+    int countPostsForCourse(int courseId);
 
     // Find a single post by its postId
     @Query("SELECT * FROM forum_posts WHERE postId = :postId LIMIT 1")

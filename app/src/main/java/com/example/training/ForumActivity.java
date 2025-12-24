@@ -2,11 +2,11 @@ package com.example.training;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,8 +25,8 @@ public class ForumActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ForumPostAdapter adapter;
     private List<ForumPost> postList = new ArrayList<>();
-
     private AppDatabase db;
+    private int selectedCourseId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,48 +48,43 @@ public class ForumActivity extends AppCompatActivity {
 
         db = AppDatabase.getDatabase(this);
 
-        String selectedCourseId = getIntent().getStringExtra("course_id");
+        selectedCourseId = getIntent().getIntExtra("course_id",0);
 
-        Log.d("ForumActivity", "Selected course ID: " + selectedCourseId);
-        db.forumPostDao().getPostsForCourse(selectedCourseId)
-                .observe(this, posts -> {
-                    Log.d("ForumActivity", "Posts count: " + posts.size());
-                });
 
+        // Observe posts for the selected course
         db.forumPostDao().getPostsForCourse(selectedCourseId)
-                .observe(this, posts -> {
-                    postList.clear();
-                    postList.addAll(posts);
-                    adapter.notifyDataSetChanged();
+                .observe(this, new Observer<List<ForumPost>>() {
+                    @Override
+                    public void onChanged(List<ForumPost> posts) {
+                        postList.clear();
+                        postList.addAll(posts);
+                        adapter.notifyDataSetChanged();
+                    }
                 });
 
         FloatingActionButton fab = findViewById(R.id.fabAddPost);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(ForumActivity.this, NewPostActivity.class);
-            intent.putExtra("course_id", selectedCourseId); // pass courseId to new post
+            intent.putExtra("course_id", selectedCourseId);
             startActivity(intent);
         });
 
-        // Seed sample data for testing
+        // Optional: seed sample data if needed
         seedSampleData();
     }
 
-
-    // ───────── Open comments ─────────
+    // Open comment screen
     private void openCommentScreen(ForumPost post) {
         Intent intent = new Intent(this, CommentActivity.class);
         intent.putExtra("post_id", post.getPostId());
         startActivityForResult(intent, REQUEST_CODE_COMMENT);
     }
 
-    // ───────── Handle comment result ─────────
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE_COMMENT && resultCode == RESULT_OK && data != null) {
             String postId = data.getStringExtra("post_id");
-
             for (int i = 0; i < postList.size(); i++) {
                 ForumPost post = postList.get(i);
                 if (post.getPostId().equals(postId)) {
@@ -101,14 +96,12 @@ public class ForumActivity extends AppCompatActivity {
         }
     }
 
+    // Seed sample posts if database is empty
     private void seedSampleData() {
         new Thread(() -> {
-            AppDatabase db = AppDatabase.getDatabase(this);
+            int[] sampleCourses = {1, 2};
 
-            String[] courseIds = {"course1", "course2"};
-
-            for (String courseId : courseIds) {
-                // Use synchronous count
+            for (int courseId : sampleCourses) {
                 if (db.forumPostDao().countPostsForCourse(courseId) == 0) {
                     for (int i = 1; i <= 2; i++) {
                         ForumPost post = new ForumPost(
@@ -125,5 +118,6 @@ public class ForumActivity extends AppCompatActivity {
             }
         }).start();
     }
+
 
 }

@@ -35,7 +35,7 @@ public class NewPostActivity extends AppCompatActivity {
         buttonSubmitPost = findViewById(R.id.button_submit_post);
 
         // Get course ID from ForumActivity
-        String courseId = getIntent().getStringExtra("course_id");
+        int courseId = getIntent().getIntExtra("course_id",0);
 
         // ───────── Submit Post ─────────
         buttonSubmitPost.setOnClickListener(v -> {
@@ -46,7 +46,7 @@ public class NewPostActivity extends AppCompatActivity {
                 return;
             }
 
-            if (courseId == null) {
+            if (courseId == 0) {
                 Toast.makeText(this, "Course not found!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -54,10 +54,12 @@ public class NewPostActivity extends AppCompatActivity {
             new Thread(() -> {
                 AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
 
+                String author = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        .getString("username", "Unknown User");
                 ForumPost post = new ForumPost(
                         String.valueOf(System.currentTimeMillis()), // postId
                         courseId,                                  // courseId
-                        "Student",                                 // author (can be dynamic later)
+                        author,                                 // author (can be dynamic later)
                         content,                                   // content
                         System.currentTimeMillis(),                // timestamp
                         0                                          // commentCount
@@ -72,4 +74,6 @@ public class NewPostActivity extends AppCompatActivity {
             }).start();
         });
     }
+
+
 }
