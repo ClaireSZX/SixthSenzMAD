@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 原始默认颜色 (可以保留或删除) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="HomePageBlue">#44576D</color>
+    <!-- ✅ 你团队设计的新颜色 -->
+    <color name="brand_dark_navy">#29353C</color>  <!-- 最深的蓝黑色，用于顶部/底部栏 -->
+    <color name="brand_navy_blue">#44576D</color>  <!-- 深蓝色，用于按钮 -->
+    <color name="brand_slate_gray">#768A96</color> <!-- 石板灰，用于次要文字或边框 -->
+    <color name="brand_light_blue">#AAC7D8</color>  <!-- 这里的 'C' 是正确的英文字母 -->
+    <color name="brand_powder_blue">#DFEBF6</color> <!-- 淡蓝色，用于卡片背景 -->
+    <color name="brand_off_white">#E6E6E6</color>  <!-- 米白色，用于主背景 -->
 </resources>

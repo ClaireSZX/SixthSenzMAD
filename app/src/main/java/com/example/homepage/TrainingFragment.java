@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.madproject.R;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TrainingFragment#newInstance} factory method to

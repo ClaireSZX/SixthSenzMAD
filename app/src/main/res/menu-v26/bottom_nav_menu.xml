@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/home_svgrepo_com"
+        android:icon="@drawable/home_add_angle_svgrepo_com__1_"
         android:title="Home"
-        android:iconTint="@color/white"/>
+        app:itemIconTint="@null"/>
     <item
         android:id="@+id/chatFragment"
-        android:icon="@drawable/chat_round_line_svgrepo_com"
+        android:icon="@drawable/chat_round_svgrepo_com"
         android:title="Chat"
-        android:iconTint="@color/white"/>
+        app:itemIconTint="@null"/>
     <item
         android:id="@+id/trainingFragment"
-        android:icon="@drawable/course_svgrepo_com"
+        android:icon="@drawable/course_diary_svgrepo_com"
         android:title="Training"
-        android:iconTint="@color/white"/>
+        app:itemIconTint="@null"/>
     <item
         android:id="@+id/profileFragment"
-        android:icon="@drawable/profile"
+        android:icon="@drawable/profile_round_1342_svgrepo_com__1_"
         android:title="Profile"
-        android:iconTint="@color/white"/>
+        app:itemIconTint="@null"/>
 </menu>
