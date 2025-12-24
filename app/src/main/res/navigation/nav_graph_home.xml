@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/trainingFragment"
-        android:name="com.example.homepage.TrainingFragment"
+        android:name="com.example.training.TrainingFragment"
         android:label="Training" />
 
     <!-- Add PostsFragment (the "other page" where posts can be created) -->

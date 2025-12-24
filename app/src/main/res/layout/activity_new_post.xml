@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/frosted_background_white"
+    tools:context="com.example.training.NewPostActivity">
+
+    <!-- Custom Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_new_post"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/brand_navy_blue"
+        app:titleTextColor="@android:color/white"
+        app:navigationIconTint="@android:color/white"
+        app:title="New Post" />
+
+    <!-- Instruction -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share your question or local job lead:"
+        android:textSize="16sp"
+        android:textColor="@color/frosted_primary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Content Input -->
+    <EditText
+        android:id="@+id/edit_text_post_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="Type your message here..."
+        android:gravity="top|start"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
+        android:inputType="textMultiLine"
+        android:textColor="@color/frosted_primary_dark"
+        android:textColorHint="@color/frosted_medium_gray"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/button_submit_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit Post"
+        android:textColor="@color/frosted_background_white"
+        android:backgroundTint="@color/brand_navy_blue"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.Material3.Button.TextButton"/>
+</LinearLayout>

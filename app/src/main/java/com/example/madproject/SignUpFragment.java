@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.AppDatabase;
 import com.example.homepage.MainActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -91,7 +92,7 @@ public class SignUpFragment extends Fragment {
 
                         // Launch MainActivity after signup
                         Intent intent = new Intent(getActivity(), MainActivity.class);
-                        intent.putExtra("email", email); // optional: pass user data
+                        intent.putExtra("userEmail", newUser.getEmail());  // pass the new user ID
                         startActivity(intent);
 
                         // Close SignupActivity so user can't go back
