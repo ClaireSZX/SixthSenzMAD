@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Job search &amp; matching</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="cat_construction">Construction</string>
-    <string name="cat_domestic">Domestic</string>
-    <string name="cat_food_service">Food Service</string>
-    <string name="rec_title">Recommended for You</string>
-</resources>

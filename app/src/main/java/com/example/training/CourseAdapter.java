@@ -47,6 +47,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             intent.putExtra("content_url", course.getContentUrl());
             context.startActivity(intent);
         });
+
+
     }
 
     @Override

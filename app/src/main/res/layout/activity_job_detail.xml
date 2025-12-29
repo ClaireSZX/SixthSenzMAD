@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="46dp"
+            android:layout_height="41dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:backgroundTint="@color/brand_navy_blue"
+            android:contentDescription="Back"
+            android:padding="8dp"
+            android:src="@drawable/ic_back" />
+
+        <!-- Job Title -->
+        <TextView
+            android:id="@+id/tvJobTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="General Construction Worker"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvJobCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ABC Company"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <!-- Pay Rate -->
+        <TextView
+            android:id="@+id/tvPayRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RM 80 / Day"
+            android:textColor="#1976D2"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Distance -->
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.2 km away"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#555555" />
+
+        <!-- Match Score -->
+        <TextView
+            android:id="@+id/tvMatchScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="95% Match"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#2E7D32"
+            android:textStyle="bold" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp" />
+
+        <!-- Job Category Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <!-- Job Category -->
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Construction"
+            android:textSize="16sp" />
+
+        <!-- Job Description Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Job Description"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Job Description -->
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Helping with site preparation, carrying materials, and basic tool operation. No advanced experience needed."
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp" />
+
+        <!-- Message Employer Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChatEmployer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:text="Message Employer"
+            app:icon="@android:drawable/stat_notify_chat"
+            android:textColor="@color/white"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@color/brand_navy_blue"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+

@@ -43,23 +43,17 @@ public class AddCourseActivity extends AppCompatActivity {
             return;
         }
 
-        // Create new course object
-        Course newCourse = new Course(
-                title,
-                category,
-                duration,
-                contentUrl
-        );
+        Course newCourse = new Course(title, category, duration, contentUrl);
 
-        // Insert into Room database on a background thread
         new Thread(() -> {
-            AppDatabase db = AppDatabase.getDatabase(this);
-            db.CourseDao().insertCourse(newCourse); // make sure CourseDao exists
+            AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+            db.courseDao().insertCourse(newCourse);
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Course saved successfully!", Toast.LENGTH_SHORT).show();
-                finish(); // close activity
+                finish();
             });
         }).start();
     }
+
 }

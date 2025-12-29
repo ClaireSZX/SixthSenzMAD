@@ -10,11 +10,15 @@ import java.util.List;
 @Dao
 public interface CourseDao {
 
-    @Query("SELECT * FROM Course")
-    LiveData<List<Course>> getAllCourses();
-
+    // Insert a course into the database
     @Insert
     void insertCourse(Course course);
 
-    // optionally: delete, update methods
+    // Synchronous method for seeding / checking if database is empty
+    @Query("SELECT * FROM Course")
+    List<Course> getAllCoursesSync();
+
+    // LiveData method for observing the database
+    @Query("SELECT * FROM Course")
+    LiveData<List<Course>> getAllCourses();
 }

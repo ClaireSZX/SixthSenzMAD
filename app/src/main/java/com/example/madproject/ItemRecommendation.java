@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jobsearch.Job;
+
 import java.util.List;
 
 public class ItemRecommendation extends RecyclerView.Adapter<ItemRecommendation.ViewHolder> {

@@ -1,16 +1,19 @@
 package com.example.homepage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.madproject.Job;
+import com.example.jobsearch.Job;
+import com.example.jobsearch.JobSearchActivity;
 import com.example.madproject.ItemRecommendation;
 import com.example.madproject.R;
 
@@ -58,63 +61,65 @@ public class HomeFragment extends Fragment {
 
         loadJobs(); // Populate jobList
 
+        Button btnGoToSearch = view.findViewById(R.id.btnGoToSearch);
+
+        btnGoToSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), JobSearchActivity.class);
+            startActivity(intent);
+        });
+
         return view;
     }
 
 
     private void loadJobs() {
-        // Example data - replace with real recommendations
         jobList.add(new Job(
                 "Software Engineer",
                 "Google",
                 "Mountain View",
+                "Technology",
                 "Java, Python, Cloud",
-                "Technology"));
+                "$120k–$150k",
+                "5 km",
+                "92%"
+        ));
 
         jobList.add(new Job(
                 "Android Developer",
                 "Facebook",
                 "Menlo Park",
+                "Social Media",
                 "Kotlin, Android SDK, Firebase",
-                "Social Media"));
+                "$110k–$140k",
+                "8 km",
+                "88%"
+        ));
 
         jobList.add(new Job(
                 "Data Scientist",
                 "Amazon",
                 "Seattle",
+                "E-commerce",
                 "Python, Machine Learning, SQL",
-                "E-commerce"));
-
-        jobList.add(new Job(
-                "UI/UX Designer",
-                "Airbnb",
-                "San Francisco",
-                "Figma, Adobe XD, User Research",
-                "Hospitality"));
-
-        jobList.add(new Job(
-                "Backend Developer",
-                "Netflix",
-                "Los Gatos",
-                "Java, Spring Boot, Microservices",
-                "Streaming Media"));
-
-        jobList.add(new Job(
-                "Cybersecurity Analyst",
-                "Microsoft",
-                "Redmond",
-                "Network Security, Python, Threat Analysis",
-                "Technology"));
+                "$130k–$160k",
+                "12 km",
+                "90%"
+        ));
 
         jobList.add(new Job(
                 "Product Manager",
                 "Spotify",
                 "New York",
+                "Music Streaming",
                 "Roadmap Planning, Agile, Data Analysis",
-                "Music Streaming"));
+                "$115k–$145k",
+                "6 km",
+                "85%"
+        ));
 
 
-        // Notify adapter
+
+    // Notify adapter
         adapter.notifyDataSetChanged();
 
         // Show or hide empty text

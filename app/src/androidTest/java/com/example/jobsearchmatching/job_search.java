@@ -1,8 +1,7 @@
 package com.example.jobsearchmatching;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.jobsearch.Job;
+import com.example.jobsearch.JobAdaptor;
+import com.example.madproject.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,7 @@ public class job_search extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // 1. Inflate the layout for this fragment (fragment_job_search.xml)
-        View view = inflater.inflate(R.layout.fragment_job_search, container, false);
+        View view = inflater.inflate(R.layout.activity_job_search, container, false);
 
         // 2. Initialize the RecyclerView for Personalized Recommendations
         RecyclerView recyclerView = view.findViewById(R.id.rvRecommendedJobs);
@@ -60,16 +63,6 @@ public class job_search extends Fragment {
         // 3. Set a Horizontal layout for easy swiping (Accessible UI) [cite: 6]
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
-
-        // 4. Create sample data for Match Results (Category Tagging: Construction, Domestic, Food Service)
-        List<job_details> jobs = new ArrayList<>();
-        jobs.add(new job_details("Construction Helper", "Construction", "RM 80/Day", "1.2 km", "95% Match"));
-        jobs.add(new job_details("Home Cleaner", "Domestic", "RM 50/Day", "0.5 km", "88% Match"));
-        jobs.add(new job_details("Waiter", "Food Service", "RM 60/Day", "2.0 km", "80% Match"));
-
-        // 5. Initialize and set the Adaptor to the RecyclerView
-        JobAdaptor adaptor = new JobAdaptor(jobs);
-        recyclerView.setAdapter(adaptor);
 
         return view;
     }

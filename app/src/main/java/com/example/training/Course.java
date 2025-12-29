@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity (tableName = "Course")
 public class Course implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)

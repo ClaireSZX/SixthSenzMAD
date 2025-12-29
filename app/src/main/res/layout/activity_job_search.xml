@@ -3,34 +3,45 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:layout_height="match_parent">
 
-    <androidx.fragment.app.FragmentContainerView
+    <!-- Map Fragment -->
+    <FrameLayout
         android:id="@+id/mapContainer"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Top Search and Filter Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="12dp">
 
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="46dp"
+            android:layout_height="41dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:backgroundTint="@color/brand_navy_blue"
+            android:contentDescription="Back"
+            android:padding="8dp"
+            android:src="@drawable/ic_back" />
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
-            app:cardElevation="6dp">
-
+            app:cardElevation="6dp"
+            android:backgroundTint="@color/frosted_background_light">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:queryHint="Search local jobs..."
-                app:iconifiedByDefault="false" />
+                app:iconifiedByDefault="false"
+                android:backgroundTint="@color/frosted_background_light" />
         </com.google.android.material.card.MaterialCardView>
 
         <HorizontalScrollView
@@ -66,6 +77,7 @@
         </HorizontalScrollView>
     </LinearLayout>
 
+    <!-- Bottom Sheet Recommendation Section -->
     <androidx.cardview.widget.CardView
         android:id="@+id/recommendationSheet"
         android:layout_width="match_parent"
@@ -101,7 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:backgroundTint="@color/frosted_background_light"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

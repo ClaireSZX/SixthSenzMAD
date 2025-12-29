@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment {
                     // ✅ Save session ONLY after successful login
                     SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("username", user.getName()); // e.g., "Claire"
+                    editor.putString("username", user.getName());
                     editor.apply();
 
                     prefs.edit()

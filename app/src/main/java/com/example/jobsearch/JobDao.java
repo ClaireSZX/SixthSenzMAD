@@ -1,4 +1,4 @@
-package com.example.madproject;
+package com.example.jobsearch;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
