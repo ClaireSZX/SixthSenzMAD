@@ -67,7 +67,7 @@ public class CommentActivity extends AppCompatActivity {
         db = AppDatabase.getDatabase(this);
 
         // Observe comments for this post
-        db.CommentDao()
+        db.commentDao()
                 .getCommentsForPost(postId)
                 .observe(this, comments -> {
                     adapter.setComments(comments);
@@ -96,7 +96,7 @@ public class CommentActivity extends AppCompatActivity {
 
             new Thread(() -> {
                 // Insert comment
-                db.CommentDao().insert(comment);
+                db.commentDao().insert(comment);
 
                 // Increment comment count in ForumPost
                 ForumPost post = db.forumPostDao().findPostById(postId);

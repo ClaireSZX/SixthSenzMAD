@@ -18,19 +18,23 @@ import com.example.training.ForumPost;
 import com.example.training.ForumPostDao;
 import com.example.training.Comment;
 
+import java.util.concurrent.Executors;
 
 
 // entities 数组里列出所有的表，version 是数据库版本号，每次修改表结构都需要增加版本号
-@Database(entities = {ForumPost.class, User.class, Comment.class, Course.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {ForumPost.class, User.class, Comment.class, Course.class},
+        version = 1,
+        exportSchema = false
+)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
     public abstract ForumPostDao forumPostDao();
     public abstract UserDao userDao();
-    public abstract CommentDao CommentDao();
-    public abstract CourseDao CourseDao();
-
+    public abstract CommentDao commentDao();
+    public abstract CourseDao courseDao();
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -48,4 +52,5 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
 }

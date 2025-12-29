@@ -3,6 +3,7 @@ package com.example.training;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,41 +33,81 @@ public class TrainingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        try {
+            View view = inflater.inflate(R.layout.fragment_training, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_training, container, false);
+            // RecyclerView setup
+            recyclerView = view.findViewById(R.id.recyclerCourses);
+            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        recyclerView = view.findViewById(R.id.recyclerCourses);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+            // Initialize list and adapter
+            courseList = new ArrayList<>();
+            adapter = new CourseAdapter(requireContext(), courseList);
+            recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fabAddCourse = view.findViewById(R.id.fabAddCourse);
-
-        courseList = new ArrayList<>();
-        adapter = new CourseAdapter(requireContext(), courseList);
-        recyclerView.setAdapter(adapter);
-
-        db = AppDatabase.getDatabase(requireContext());
-
-        observeCourses();
-        fetchCurrentUsername();
-        applyRolePermissions(fabAddCourse);
+            // FAB setup with role-based visibility
+            FloatingActionButton fabAddCourse = view.findViewById(R.id.fabAddCourse);
+            applyRolePermissions(fabAddCourse);
 
 
-        applyRolePermissions(fabAddCourse);
+            // Get database instance
+            db = AppDatabase.getDatabase(requireContext());
 
-        return view;
+            // Seed courses if empty and observe database
+            seedAndObserveCourses();
+
+            return view;
+        } catch (Exception e) {
+            Log.e("TrainingFragment", "Error in onCreateView", e);
+            return super.onCreateView(inflater, container, savedInstanceState);
+        }
     }
 
-    private void observeCourses() {
-        db.CourseDao().getAllCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-            @Override
-            public void onChanged(List<Course> courses) {
-                courseList.clear();
-                courseList.addAll(courses);
-                adapter.notifyDataSetChanged();
+    /** Seeds sample courses if the database is empty and observes LiveData for updates */
+    private void seedAndObserveCourses() {
+        if (db == null || db.courseDao() == null) return;
+
+        new Thread(() -> {
+            // Synchronously check if database is empty
+            List<Course> courses = db.courseDao().getAllCoursesSync();
+
+            if (courses.isEmpty()) {
+                // Seed sample courses
+                db.courseDao().insertCourse(new Course(
+                        "Android Basics",
+                        "Mobile Development",
+                        "3 hours",
+                        "https://example.com/android"
+                ));
+                db.courseDao().insertCourse(new Course(
+                        "Java Fundamentals",
+                        "Programming",
+                        "2.5 hours",
+                        "https://example.com/java"
+                ));
+                db.courseDao().insertCourse(new Course(
+                        "Kotlin Advanced",
+                        "Mobile Development",
+                        "4 hours",
+                        "https://example.com/kotlin"
+                ));
             }
-        });
+
+            // Observe LiveData on main thread to update RecyclerView
+            requireActivity().runOnUiThread(() -> db.courseDao().getAllCourses().observe(
+                    getViewLifecycleOwner(),
+                    liveCourses -> {
+                        courseList.clear();
+                        if (liveCourses != null && !liveCourses.isEmpty()) {
+                            courseList.addAll(liveCourses);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+            ));
+        }).start();
     }
 
+    /** Shows FAB only for employer users */
     private void applyRolePermissions(FloatingActionButton fabAddCourse) {
         String userType = getUserType();
         boolean isEmployer = "employer".equalsIgnoreCase(userType);
@@ -75,32 +115,18 @@ public class TrainingFragment extends Fragment {
         fabAddCourse.setVisibility(isEmployer ? View.VISIBLE : View.GONE);
 
         if (isEmployer) {
-            fabAddCourse.setOnClickListener(v -> {
-                startActivity(new Intent(requireContext(), AddCourseActivity.class));
-            });
+            fabAddCourse.setOnClickListener(v ->
+                    startActivity(new Intent(requireContext(), AddCourseActivity.class))
+            );
         } else {
             fabAddCourse.setOnClickListener(null);
         }
     }
 
+
     private String getUserType() {
         return requireContext()
                 .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                .getString("user_type", "employee");
-    }
-
-    private void fetchCurrentUsername() {
-        String currentUserId = requireContext()
-                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                .getString("user_id", null);
-
-        if (currentUserId != null) {
-            db.userDao().getUserByEmail(currentUserId).observe(getViewLifecycleOwner(), user -> {
-                if (user != null) {
-                    String username = user.getName(); // or user.getUsername()
-                    // You can now use username, e.g., pass to AddCourseActivity or ForumActivity
-                }
-            });
-        }
+                .getString("user_type", "employee"); // default to employee
     }
 }

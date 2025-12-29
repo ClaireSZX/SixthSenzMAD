@@ -1,5 +1,7 @@
 package com.example.madproject;
 
+import com.example.jobsearch.Job;
+
 import java.util.ArrayList;
 import java.util.List;
 
