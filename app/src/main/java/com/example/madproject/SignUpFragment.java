@@ -92,7 +92,7 @@ public class SignUpFragment extends Fragment {
 
                         // Launch MainActivity after signup
                         Intent intent = new Intent(getActivity(), MainActivity.class);
-                        intent.putExtra("userEmail", newUser.getEmail());  // pass the new user ID
+                        intent.putExtra("user_email", newUser.getEmail());  // pass the new user ID
                         startActivity(intent);
 
                         // Close SignupActivity so user can't go back

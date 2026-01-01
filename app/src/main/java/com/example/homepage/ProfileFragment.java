@@ -1,6 +1,7 @@
 package com.example.homepage;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +38,18 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 1. Try arguments first
+
+        // Get email from arguments first
         if (getArguments() != null) {
-            userEmail = getArguments().getString("userEmail", null);
+            userEmail = getArguments().getString("user_email");
         }
 
-        // 2. Fallback to activity intent
+        // Fallback to activity intent
         if (userEmail == null && getActivity() != null) {
-            userEmail = getActivity().getIntent().getStringExtra("userEmail");
+            userEmail = getActivity().getIntent().getStringExtra("user_email");
         }
+
+        Log.d("ProfileFragment", "user_email = " + userEmail);
 
         // Listen for updates from edit fragments
         getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
@@ -73,7 +77,7 @@ public class ProfileFragment extends Fragment {
             User user = db.userDao().findByEmail(userEmail);
 
             if (user == null) {
-                if (getActivity() != null) {
+                if (isAdded()) {
                     getActivity().runOnUiThread(() ->
                             Toast.makeText(getContext(), "User not found. Please log in again.", Toast.LENGTH_LONG).show()
                     );
@@ -84,7 +88,7 @@ public class ProfileFragment extends Fragment {
             currentUser = user;
             userType = user.userType;
 
-            if (getActivity() != null) {
+            if (isAdded()) {
                 getActivity().runOnUiThread(() -> {
                     View correctView;
                     if ("employer".equals(userType)) {
@@ -108,27 +112,26 @@ public class ProfileFragment extends Fragment {
 
     private void onRealViewCreated(View view, User user) {
         initializeViews(view);
-
-        currentUser = user;
         updateProfileUI(user);
         checkIncompleteProfile();
 
-        // Edit button
         Button editButton = view.findViewById(R.id.buttonEdit);
-        editButton.setOnClickListener(v -> {
-            if (currentUser == null) return;
+        if (editButton != null) {
+            editButton.setOnClickListener(v -> {
+                if (currentUser == null) return;
 
-            Bundle args = getCurrentDataAsBundle();
-            args.putString("userEmail", userEmail);
+                Bundle args = getCurrentDataAsBundle();
+                args.putString("user_email", userEmail);
 
-            if ("employer".equals(currentUser.userType)) {
-                NavHostFragment.findNavController(ProfileFragment.this)
-                        .navigate(R.id.action_profile_to_edit_employer, args);
-            } else {
-                NavHostFragment.findNavController(ProfileFragment.this)
-                        .navigate(R.id.action_profile_to_edit_employee, args);
-            }
-        });
+                if ("employer".equals(currentUser.userType)) {
+                    NavHostFragment.findNavController(ProfileFragment.this)
+                            .navigate(R.id.action_profile_to_edit_employer, args);
+                } else {
+                    NavHostFragment.findNavController(ProfileFragment.this)
+                            .navigate(R.id.action_profile_to_edit_employee, args);
+                }
+            });
+        }
     }
 
     private void initializeViews(View view) {
@@ -204,7 +207,7 @@ public class ProfileFragment extends Fragment {
                     isEmpty(currentUser.language);
         }
 
-        if (incomplete) {
+        if (incomplete && isAdded()) {
             Toast.makeText(getContext(),
                     "Your profile is incomplete. Tap Edit to update your details.",
                     Toast.LENGTH_LONG).show();
@@ -237,7 +240,6 @@ public class ProfileFragment extends Fragment {
         return bundle;
     }
 
-    // Reload user safely from DB
     private void reloadUser() {
         if (userEmail == null || getContext() == null) return;
 
@@ -245,7 +247,7 @@ public class ProfileFragment extends Fragment {
             AppDatabase db = AppDatabase.getDatabase(getContext().getApplicationContext());
             User user = db.userDao().findByEmail(userEmail);
             currentUser = user;
-            if (getActivity() != null && user != null) {
+            if (isAdded() && user != null) {
                 getActivity().runOnUiThread(() -> {
                     updateProfileUI(user);
                     checkIncompleteProfile();
