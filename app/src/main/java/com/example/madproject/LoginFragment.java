@@ -85,6 +85,8 @@ public class LoginFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("user_email", user.email);
+                    intent.putExtra("user_type", user.getUserType());
                     startActivity(intent);
                     getActivity().finish();
                 });

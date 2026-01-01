@@ -35,7 +35,7 @@ public class EditEmployerProfileFragment extends Fragment {
 
         // 从 arguments 获取 userId，并预填充数据
         if (getArguments() != null) {
-            userEmail = getArguments().getString("userEmail", null);
+            userEmail = getArguments().getString("user_email", null);
             Bundle args = getArguments();
             editTextCompanyName.setText(args.getString("name"));
             editTextAbout.setText(args.getString("about"));

@@ -44,7 +44,7 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder> i
         Job job = jobList.get(position);
 
         holder.tvJobTitle.setText(job.title);
-        holder.tvCategory.setText(job.industry);
+        holder.tvCategory.setText(job.industry); // use correct field
         holder.tvPayRate.setText(job.payRate);
         holder.tvDistance.setText(job.distance);
         holder.tvMatchScore.setText(job.matchScore);
@@ -59,7 +59,16 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder> i
         return jobList.size();
     }
 
-    // Filter implementation
+    // ✅ Update jobs (adapter method, not in Filter)
+    public void updateJobs(List<Job> newJobs) {
+        jobList.clear();
+        jobList.addAll(newJobs);
+        jobListFull.clear();
+        jobListFull.addAll(newJobs); // keep full copy for filtering
+        notifyDataSetChanged();
+    }
+
+    // Filterable
     @Override
     public Filter getFilter() {
         return jobFilter;
@@ -93,6 +102,7 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder> i
         }
     };
 
+    // ViewHolder
     static class JobViewHolder extends RecyclerView.ViewHolder {
         TextView tvJobTitle, tvCategory, tvPayRate, tvDistance, tvMatchScore;
 
@@ -106,5 +116,3 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder> i
         }
     }
 }
-
-

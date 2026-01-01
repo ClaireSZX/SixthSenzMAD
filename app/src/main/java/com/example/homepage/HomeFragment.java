@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.AppDatabase;
 import com.example.jobsearch.Job;
 import com.example.jobsearch.JobSearchActivity;
 import com.example.madproject.ItemRecommendation;
@@ -27,18 +28,7 @@ public class HomeFragment extends Fragment {
     private ItemRecommendation adapter;
     private List<Job> jobList = new ArrayList<>();
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString("param1", param1);
-        args.putString("param2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public HomeFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,23 +36,20 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Separate references
-        TextView headerTextView = view.findViewById(R.id.tv_recommendation_header);
         emptyText = view.findViewById(R.id.textEmpty);
         recyclerView = view.findViewById(R.id.recyclerJobs);
 
-        // Horizontal layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Adapter
         adapter = new ItemRecommendation(jobList);
         recyclerView.setAdapter(adapter);
 
-        loadJobs(); // Populate jobList
+        // Load jobs from DB
+        loadJobsFromDatabase();
 
         Button btnGoToSearch = view.findViewById(R.id.btnGoToSearch);
-
         btnGoToSearch.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), JobSearchActivity.class);
             startActivity(intent);
@@ -71,64 +58,28 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    private void loadJobsFromDatabase() {
+        AppDatabase db = AppDatabase.getDatabase(getContext());
 
-    private void loadJobs() {
-        jobList.add(new Job(
-                "Software Engineer",
-                "Google",
-                "Mountain View",
-                "Technology",
-                "Java, Python, Cloud",
-                "$120k–$150k",
-                "5 km",
-                "92%"
-        ));
+        new Thread(() -> {
+            List<Job> dbJobs = db.jobDao().getAllJobs();
 
-        jobList.add(new Job(
-                "Android Developer",
-                "Facebook",
-                "Menlo Park",
-                "Social Media",
-                "Kotlin, Android SDK, Firebase",
-                "$110k–$140k",
-                "8 km",
-                "88%"
-        ));
+            // Update UI on main thread
+            getActivity().runOnUiThread(() -> {
+                jobList.clear();
+                jobList.addAll(dbJobs);
+                adapter.notifyDataSetChanged();
 
-        jobList.add(new Job(
-                "Data Scientist",
-                "Amazon",
-                "Seattle",
-                "E-commerce",
-                "Python, Machine Learning, SQL",
-                "$130k–$160k",
-                "12 km",
-                "90%"
-        ));
+                if (jobList.isEmpty()) {
+                    emptyText.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyText.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            });
 
-        jobList.add(new Job(
-                "Product Manager",
-                "Spotify",
-                "New York",
-                "Music Streaming",
-                "Roadmap Planning, Agile, Data Analysis",
-                "$115k–$145k",
-                "6 km",
-                "85%"
-        ));
-
-
-
-    // Notify adapter
-        adapter.notifyDataSetChanged();
-
-        // Show or hide empty text
-        if (jobList.isEmpty()) {
-            emptyText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            emptyText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        }).start();
     }
 }
+

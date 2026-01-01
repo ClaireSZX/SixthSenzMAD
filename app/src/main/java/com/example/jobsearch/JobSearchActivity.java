@@ -3,15 +3,14 @@ package com.example.jobsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.AppDatabase;
 import com.example.madproject.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class JobSearchActivity extends AppCompatActivity {
@@ -34,42 +33,42 @@ public class JobSearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rvRecommendedJobs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // Job data
-        List<Job> jobs = new ArrayList<>();
-        jobs.add(new Job("Construction Helper", "Local Contractor", "Kuala Lumpur", "Construction", "Manual labor", "RM 80/Day", "1.2 km", "95%"));
-        jobs.add(new Job("Home Cleaner", "Private Client", "Petaling Jaya", "Domestic", "Cleaning", "RM 50/Day", "0.5 km", "88%"));
-        jobs.add(new Job("Waiter", "Restaurant", "Subang", "Food Service", "Customer Service", "RM 60/Day", "2.0 km", "80%"));
+        // Load jobs from database in background thread
+        AppDatabase db = AppDatabase.getDatabase(this);
 
-        // Adapter
-        adapter = new JobAdaptor(jobs, job -> {
-            Intent intent = new Intent(JobSearchActivity.this, JobDetailActivity.class);
-            intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.title);
-            intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.company);
-            intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.industry);
-            intent.putExtra(JobDetailActivity.EXTRA_PAY, job.payRate);
-            intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.distance);
-            intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.matchScore);
-            startActivity(intent);
-        });
+        new Thread(() -> {
+            List<Job> jobList = db.jobDao().getAllJobs();
 
-        recyclerView.setAdapter(adapter);
+            runOnUiThread(() -> {
+                // Initialize adapter after data is loaded
+                adapter = new JobAdaptor(jobList, job -> {
+                    Intent intent = new Intent(JobSearchActivity.this, JobDetailActivity.class);
+                    intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.title);
+                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.company);
+                    intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.industry);
+                    intent.putExtra(JobDetailActivity.EXTRA_PAY, job.payRate);
+                    intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.distance);
+                    intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.matchScore);
+                    startActivity(intent);
+                });
+
+                recyclerView.setAdapter(adapter);
+            });
+        }).start();
 
         // Search filter
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                adapter.getFilter().filter(query);
+                if (adapter != null) adapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                if (adapter != null) adapter.getFilter().filter(newText);
                 return false;
             }
         });
     }
 }
-
-
-
