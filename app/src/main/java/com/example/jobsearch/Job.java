@@ -15,24 +15,15 @@ public class Job {
     public String industry;
     public String skills;
 
-    // UI-related
     public String payRate;
     public String distance;
     public String matchScore;
-    public int employerId; // ID of the employer (matches User.id)
+    public int employerId;
 
+    public Job(String title, String company, String location, String industry,
+               String skills, String payRate, String distance,
+               String matchScore, int employerId) {
 
-    public Job(
-            String title,
-            String company,
-            String location,
-            String industry,
-            String skills,
-            String payRate,
-            String distance,
-            String matchScore,
-            int employerId // ID of the employer (matches User.id)
-    ) {
         this.title = title;
         this.company = company;
         this.location = location;
@@ -44,7 +35,10 @@ public class Job {
         this.employerId = employerId;
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
+    public String getCompany() { return company; }
+    public String getIndustry() { return industry; }
+    public String getPayRate() { return payRate; }
+    public String getDistance() { return distance; }
+    public String getMatchScore() { return matchScore; }
 }

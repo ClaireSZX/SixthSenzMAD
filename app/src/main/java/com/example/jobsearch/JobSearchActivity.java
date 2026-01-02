@@ -3,6 +3,7 @@ package com.example.jobsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AppDatabase;
 import com.example.madproject.R;
-import com.example.madproject.User;
 
 import java.util.List;
 
@@ -23,57 +23,37 @@ public class JobSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_search);
 
-        // Back button
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
 
-        // SearchView
         SearchView searchView = findViewById(R.id.searchView);
-
-        // RecyclerView setup
         RecyclerView recyclerView = findViewById(R.id.rvRecommendedJobs);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // Load jobs from database in background thread
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         AppDatabase db = AppDatabase.getDatabase(this);
 
         new Thread(() -> {
-            // Load jobs and employers from database
             List<Job> jobList = db.jobDao().getAllJobs();
-            List<User> userList = db.userDao().getAllUsers(); // make sure this DAO exists
 
             runOnUiThread(() -> {
-                // Initialize adapter with jobs + employer list
-                adapter = new JobAdaptor(jobList, userList, job -> {
-                    Intent intent = new Intent(JobSearchActivity.this, JobDetailActivity.class);
+                adapter = new JobAdaptor(jobList, job -> {
+                    Intent intent = new Intent(this, JobDetailActivity.class);
 
-                    // Pass job details
-                    intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.title);
+                    intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.getTitle());
+                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.getCompany());
+                    intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.getIndustry());
+                    intent.putExtra(JobDetailActivity.EXTRA_PAY, job.getPayRate());
+                    intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.getDistance());
+                    intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.getMatchScore());
 
-                    // Find employer's company name from userList
-                    String companyName = "";
-                    for (User user : userList) {
-                        if (user.id == job.employerId) { // match by employer ID
-                            companyName = user.companyName; // get company name
-                            break;
-                        }
-                    }
-                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, companyName);
-
-                    intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.industry);
-                    intent.putExtra(JobDetailActivity.EXTRA_PAY, job.payRate);
-                    intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.distance);
-                    intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.matchScore);
                     startActivity(intent);
                 });
-
 
                 recyclerView.setAdapter(adapter);
             });
         }).start();
 
-
-        // Search filter
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

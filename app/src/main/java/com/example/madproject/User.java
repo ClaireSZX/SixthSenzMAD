@@ -46,5 +46,9 @@ public class User {
             return companyName;
         }
     }
+
+    public String getCompanyName() {
+        return companyName;
+    }
 }
 

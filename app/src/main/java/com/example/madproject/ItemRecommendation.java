@@ -1,3 +1,4 @@
+
 package com.example.madproject;
 
 import android.view.LayoutInflater;
@@ -8,15 +9,24 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jobsearch.Job;
+import com.example.madproject.R;
 
 import java.util.List;
 
 public class ItemRecommendation extends RecyclerView.Adapter<ItemRecommendation.ViewHolder> {
 
-    List<Job> jobs;
+    private List<Job> jobs;
+    private OnJobClickListener listener;
 
-    public ItemRecommendation(List<Job> jobs) {
+    // Click listener interface
+    public interface OnJobClickListener {
+        void onJobClick(Job job);
+    }
+
+    // Updated constructor with click listener
+    public ItemRecommendation(List<Job> jobs, OnJobClickListener listener) {
         this.jobs = jobs;
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,6 +54,13 @@ public class ItemRecommendation extends RecyclerView.Adapter<ItemRecommendation.
         holder.title.setText(job.title);
         holder.company.setText(job.company);
         holder.location.setText(job.location);
+
+        // Set click listener for each item
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onJobClick(job);
+            }
+        });
     }
 
     @Override

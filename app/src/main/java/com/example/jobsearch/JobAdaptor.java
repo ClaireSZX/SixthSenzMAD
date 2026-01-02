@@ -11,12 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.madproject.R;
-import com.example.madproject.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
         implements Filterable {
@@ -27,21 +24,12 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
 
     private List<Job> jobList;
     private List<Job> jobListFull;
-    private OnJobClickListener listener;
+    private final OnJobClickListener listener;
 
-    // employerId -> companyName
-    private final Map<Integer, String> employerCompanyMap = new HashMap<>();
-
-    // Constructor
-    public JobAdaptor(List<Job> jobList, List<User> users, OnJobClickListener listener) {
+    public JobAdaptor(List<Job> jobList, OnJobClickListener listener) {
         this.jobList = jobList;
         this.jobListFull = new ArrayList<>(jobList);
         this.listener = listener;
-
-        // Build employer map
-        for (User user : users) {
-            employerCompanyMap.put(user.id, user.companyName);
-        }
     }
 
     @NonNull
@@ -56,24 +44,22 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobList.get(position);
 
-        holder.tvJobTitle.setText(job.title);
-        holder.tvCategory.setText(job.industry);
-        holder.tvCompany.setText(job.company);
-        holder.tvPayRate.setText(job.payRate);
-        holder.tvDistance.setText(job.distance);
-        holder.tvMatchScore.setText(job.matchScore);
+        holder.tvJobTitle.setText(job.getTitle());
+        holder.tvCompany.setText(job.getCompany());
+        holder.tvCategory.setText(job.getIndustry());
+        holder.tvPayRate.setText(job.getPayRate());
+        holder.tvDistance.setText(job.getDistance());
+        holder.tvMatchScore.setText(job.getMatchScore());
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onJobClick(job);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onJobClick(job));
     }
 
     @Override
     public int getItemCount() {
-        return jobList.size();
+        return jobList == null ? 0 : jobList.size();
     }
 
-    // ================= FILTER LOGIC =================
+    // ---------------- FILTER ----------------
     @Override
     public Filter getFilter() {
         return jobFilter;
@@ -87,20 +73,14 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(jobListFull);
             } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
+                String filter = constraint.toString().toLowerCase().trim();
 
                 for (Job job : jobListFull) {
-
-                    String companyName =
-                            employerCompanyMap.getOrDefault(job.employerId, "");
-
-                    boolean matches =
-                            job.title.toLowerCase().contains(filterPattern) ||
-                                    job.industry.toLowerCase().contains(filterPattern) ||
-                                    job.location.toLowerCase().contains(filterPattern) ||
-                                    companyName.toLowerCase().contains(filterPattern);
-
-                    if (matches) {
+                    if (
+                            job.getTitle().toLowerCase().contains(filter) ||
+                                    job.getCompany().toLowerCase().contains(filter) ||
+                                    job.getIndustry().toLowerCase().contains(filter)
+                    ) {
                         filteredList.add(job);
                     }
                 }
@@ -119,9 +99,8 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
         }
     };
 
-    // ================= VIEW HOLDER =================
     static class JobViewHolder extends RecyclerView.ViewHolder {
-        TextView tvJobTitle, tvCategory, tvPayRate, tvDistance, tvMatchScore,tvCompany;
+        TextView tvJobTitle, tvCategory, tvCompany, tvPayRate, tvDistance, tvMatchScore;
 
         public JobViewHolder(@NonNull View itemView) {
             super(itemView);
