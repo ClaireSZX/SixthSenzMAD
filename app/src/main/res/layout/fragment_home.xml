@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="386dp"
+        android:layout_height="675dp"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -40,6 +40,34 @@
 
         <TextView
             android:id="@+id/textEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="No jobs available"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_company_recommendation"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Recommended Companies"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCompanies"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="horizontal"
+            tools:listitem="@layout/item_recommendation_company" />
+
+        <TextView
+            android:id="@+id/textEmpty2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

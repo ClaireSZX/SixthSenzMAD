@@ -77,19 +77,19 @@ public class TrainingFragment extends Fragment {
                         "Android Basics",
                         "Mobile Development",
                         "3 hours",
-                        "https://example.com/android"
+                        "https://developer.android.com/courses/android-basics-compose/course"
                 ));
                 db.courseDao().insertCourse(new Course(
                         "Java Fundamentals",
                         "Programming",
                         "2.5 hours",
-                        "https://example.com/java"
+                        "https://www.w3schools.com/java/"
                 ));
                 db.courseDao().insertCourse(new Course(
-                        "Kotlin Advanced",
-                        "Mobile Development",
-                        "4 hours",
-                        "https://example.com/kotlin"
+                        "Interview Tips",
+                        "General",
+                        "7 mins",
+                        "https://www.indeed.com/career-advice/interviewing/job-interview-tips-how-to-make-a-great-impression"
                 ));
             }
 
