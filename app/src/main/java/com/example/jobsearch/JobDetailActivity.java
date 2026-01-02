@@ -20,6 +20,8 @@ public class JobDetailActivity extends AppCompatActivity {
     public static final String EXTRA_SCORE = "score";
     public static final String EXTRA_COMPANY = "company";
 
+    private String companyName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,17 +45,17 @@ public class JobDetailActivity extends AppCompatActivity {
             tvPay.setText(intent.getStringExtra(EXTRA_PAY));
             tvDistance.setText(intent.getStringExtra(EXTRA_DISTANCE));
             tvScore.setText(intent.getStringExtra(EXTRA_SCORE));
+
+            companyName = intent.getStringExtra(EXTRA_COMPANY);
         }
 
         MaterialButton btnGoToDetail = findViewById(R.id.btnChatEmployer);
-
         btnGoToDetail.setOnClickListener(v -> {
-            // Get company name directly from the current intent
-            String companyName = intent.getStringExtra(EXTRA_COMPANY);
-
-            Intent intent2 = new Intent(JobDetailActivity.this, ChatBox.class);
-            intent2.putExtra("company_name", companyName); // send only company name
-            startActivity(intent2);
+            if (companyName != null) {
+                Intent intent2 = new Intent(JobDetailActivity.this, ChatBox.class);
+                intent2.putExtra("company_name", companyName);
+                startActivity(intent2);
+            }
         });
     }
 
@@ -63,4 +65,3 @@ public class JobDetailActivity extends AppCompatActivity {
         return true;
     }
 }
-
