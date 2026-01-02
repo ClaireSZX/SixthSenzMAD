@@ -25,35 +25,31 @@ import java.util.concurrent.Executors;
 
 // entities 数组里列出所有的表，version 是数据库版本号，每次修改表结构都需要增加版本号
 @Database(
-        entities = {ForumPost.class, User.class, Comment.class, Course.class, Job.class},
-        version = 1,
+        entities = {User.class, Job.class, ForumPost.class, Comment.class, Course.class},
+        version = 1, // increment version to force re-creation
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
-    public abstract ForumPostDao forumPostDao();
     public abstract UserDao userDao();
+    public abstract JobDao jobDao();
+    public abstract ForumPostDao forumPostDao();
     public abstract CommentDao commentDao();
     public abstract CourseDao courseDao();
-    public abstract JobDao jobDao();
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                                    context.getApplicationContext(),
-                                    AppDatabase.class,
-                                    "app_db"
-                            )
-                            .fallbackToDestructiveMigration()
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                                    AppDatabase.class, "app_db")
+                            .fallbackToDestructiveMigration() // forces DB recreation on version change
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 }

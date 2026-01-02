@@ -6,6 +6,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.List;
+
 @Dao // 告诉 Room 这是一个 DAO 接口
 public interface UserDao {
 
@@ -35,6 +37,11 @@ public interface UserDao {
     @Query("SELECT * FROM user_table WHERE email = :email LIMIT 1")
     LiveData<User> getUserByEmail(String email);
 
+    @Query("SELECT * FROM user_table")
+    List<User> getAllUsers();
+
+    @Query("SELECT COUNT(*) FROM user_table")
+    int getCount();
 }
 
 

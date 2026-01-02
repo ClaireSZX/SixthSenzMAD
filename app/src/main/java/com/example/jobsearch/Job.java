@@ -19,6 +19,8 @@ public class Job {
     public String payRate;
     public String distance;
     public String matchScore;
+    public int employerId; // ID of the employer (matches User.id)
+
 
     public Job(
             String title,
@@ -28,7 +30,8 @@ public class Job {
             String skills,
             String payRate,
             String distance,
-            String matchScore
+            String matchScore,
+            int employerId // ID of the employer (matches User.id)
     ) {
         this.title = title;
         this.company = company;
@@ -38,5 +41,10 @@ public class Job {
         this.payRate = payRate;
         this.distance = distance;
         this.matchScore = matchScore;
+        this.employerId = employerId;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

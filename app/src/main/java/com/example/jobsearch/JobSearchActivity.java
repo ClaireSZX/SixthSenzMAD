@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AppDatabase;
 import com.example.madproject.R;
+import com.example.madproject.User;
 
 import java.util.List;
 
@@ -37,14 +38,28 @@ public class JobSearchActivity extends AppCompatActivity {
         AppDatabase db = AppDatabase.getDatabase(this);
 
         new Thread(() -> {
+            // Load jobs and employers from database
             List<Job> jobList = db.jobDao().getAllJobs();
+            List<User> userList = db.userDao().getAllUsers(); // make sure this DAO exists
 
             runOnUiThread(() -> {
-                // Initialize adapter after data is loaded
-                adapter = new JobAdaptor(jobList, job -> {
+                // Initialize adapter with jobs + employer list
+                adapter = new JobAdaptor(jobList, userList, job -> {
                     Intent intent = new Intent(JobSearchActivity.this, JobDetailActivity.class);
+
+                    // Pass job details
                     intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.title);
-                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.company);
+
+                    // Find employer's company name from userList
+                    String companyName = "";
+                    for (User user : userList) {
+                        if (user.id == job.employerId) { // match by employer ID
+                            companyName = user.companyName; // get company name
+                            break;
+                        }
+                    }
+                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, companyName);
+
                     intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.industry);
                     intent.putExtra(JobDetailActivity.EXTRA_PAY, job.payRate);
                     intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.distance);
@@ -52,9 +67,11 @@ public class JobSearchActivity extends AppCompatActivity {
                     startActivity(intent);
                 });
 
+
                 recyclerView.setAdapter(adapter);
             });
         }).start();
+
 
         // Search filter
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

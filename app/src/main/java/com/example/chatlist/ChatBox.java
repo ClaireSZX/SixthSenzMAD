@@ -9,6 +9,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -21,6 +28,7 @@ import java.util.List;
 
 public class ChatBox extends AppCompatActivity {
 
+    public static final String EXTRA_PARTNER_NAME = "PARTNER_NAME";
     private EditText messageEditText;
     private Button sendButton;
     private LinearLayout messagesLayout;
@@ -34,6 +42,12 @@ public class ChatBox extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_box);
 
+        Button translateButton = findViewById(R.id.translateButton);
+        translateButton.setOnClickListener(v -> translateMessagesToMalay());
+
+        Button translateBackButton = findViewById(R.id.translateBackButton);
+        translateBackButton.setOnClickListener(v -> translateMessagesToEnglish());
+
         // Retrieve extras
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -41,6 +55,10 @@ public class ChatBox extends AppCompatActivity {
             String companyName = extras.getString("company_name");
             if (companyName != null) {
                 chatPartnerName = companyName; // display company name as chat partner
+            }
+            String receivedName = extras.getString(EXTRA_PARTNER_NAME);
+            if (receivedName != null) {
+                chatPartnerName = receivedName;
             }
 
             chatPartnerId = extras.getString("PARTNER_ID");
@@ -129,8 +147,86 @@ public class ChatBox extends AppCompatActivity {
 
     private List<Message> getMockHistory(String partnerId) {
         List<Message> history = new ArrayList<>();
-        // Keep your mock messages here
-        history.add(new Message("This is a new conversation.", false));
+
+        switch (partnerId) {
+            case "u001": // Alice Chin
+                history.add(new Message("Hi, I saw your JobMatch profile!", false));
+                history.add(new Message("That's great! How can I help you?", true));
+                history.add(new Message("I'm interested in the Senior Marketing role.", false));
+                break;
+
+            case "u002": // Jane Smith
+                history.add(new Message("Can we reschedule the meeting?", false));
+                history.add(new Message("Sure, how about Friday?", true));
+                history.add(new Message("Sounds good to me.", false));
+                history.add(new Message("Thanks.", false));
+                break;
+
+            case "u003": // Charlie Watson
+                history.add(new Message("Hi, is there any update on my application for the Data Analyst role?", false));
+                history.add(new Message("Hi! We’re still reviewing applications.", true));
+                history.add(new Message("Should have an update in 2–3 days.", true));
+                history.add(new Message("Alright, thank you for the update.", false));
+                history.add(new Message("No problem!", true));
+                history.add(new Message("I’ll reach out once we have a decision.", true));
+                break;
+
+            default:
+                history.add(new Message("This is a new conversation.", false));
+                break;
+        }
         return history;
     }
+
+    private void translateMessagesToMalay() {
+        // Configure translator: English -> Malay
+        TranslatorOptions options =
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.MALAY)
+                        .build();
+
+        Translator translator = Translation.getClient(options);
+
+        // Download the translation model if not downloaded
+        translator.downloadModelIfNeeded()
+                .addOnSuccessListener(aVoid -> {
+                    // Translate each message in the layout
+                    for (int i = 0; i < messagesLayout.getChildCount(); i++) {
+                        CardView card = (CardView) messagesLayout.getChildAt(i);
+                        TextView textView = (TextView) card.getChildAt(0);
+                        String originalText = textView.getText().toString();
+
+                        translator.translate(originalText)
+                                .addOnSuccessListener(translatedText -> textView.setText(translatedText))
+                                .addOnFailureListener(e -> e.printStackTrace());
+                    }
+                })
+                .addOnFailureListener(e -> e.printStackTrace());
+    }
+
+    private void translateMessagesToEnglish() {
+        TranslatorOptions options =
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.MALAY)
+                        .setTargetLanguage(TranslateLanguage.ENGLISH)
+                        .build();
+
+        Translator translator = Translation.getClient(options);
+
+        translator.downloadModelIfNeeded()
+                .addOnSuccessListener(aVoid -> {
+                    for (int i = 0; i < messagesLayout.getChildCount(); i++) {
+                        CardView card = (CardView) messagesLayout.getChildAt(i);
+                        TextView textView = (TextView) card.getChildAt(0);
+                        String originalText = textView.getText().toString();
+
+                        translator.translate(originalText)
+                                .addOnSuccessListener(translatedText -> textView.setText(translatedText))
+                                .addOnFailureListener(e -> e.printStackTrace());
+                    }
+                })
+                .addOnFailureListener(e -> e.printStackTrace());
+    }
+
 }

@@ -13,7 +13,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.AppDatabase;
 import com.example.jobsearch.Job;
+import com.example.jobsearch.JobDao;
 import com.example.madproject.R;
+import com.example.madproject.User;
+import com.example.madproject.UserDao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_app_homepage);
-        seedSampleJobs();
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -37,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
         String email = getIntent().getStringExtra("user_email");
         int userId = getIntent().getIntExtra("userId", -1);
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+        }
         NavController navController = navHostFragment.getNavController();
 
         Bundle bundle = new Bundle();
@@ -59,22 +67,6 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
-    private void seedSampleJobs() {
-        new Thread(() -> {
-            AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
 
-            if (db.jobDao().getCount() == 0) {
-                List<Job> sampleJobs = new ArrayList<>();
-                sampleJobs.add(new Job("Construction Helper", "Local Contractor", "Kuala Lumpur",
-                        "Construction", "Manual labor", "RM 80/Day", "1.2 km", "95%"));
-                sampleJobs.add(new Job("Home Cleaner", "Private Client", "Petaling Jaya",
-                        "Domestic", "Cleaning", "RM 50/Day", "0.5 km", "88%"));
-                sampleJobs.add(new Job("Waiter", "Restaurant", "Subang",
-                        "Food Service", "Customer Service", "RM 60/Day", "2.0 km", "80%"));
-
-                db.jobDao().insertAll(sampleJobs);
-            }
-        }).start();
-    }
 
 }
