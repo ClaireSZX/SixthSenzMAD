@@ -126,6 +126,17 @@
             app:cornerRadius="12dp"
             android:backgroundTint="@color/brand_navy_blue"/>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeleteEmployer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#FF6961"
+            android:text="Remove Job Posting"
+            android:textColor="@color/white"
+            app:cornerRadius="12dp"
+            android:visibility="gone"/>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 

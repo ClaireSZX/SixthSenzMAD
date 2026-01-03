@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_home"
-    app:startDestination="@id/activity_app_homepage">
+    app:startDestination="@id/HomeFragment">
+
 
     <fragment
-        android:id="@+id/activity_app_homepage"
-        android:name="com.example.homepage.EmployeeHomeFragment"
-        android:label="Employee Home" />
+        android:id="@+id/HomeFragment"
+        android:name="com.example.homepage.HomeFragment"
+        android:label="Home Fragment" />
 
     <fragment
         android:id="@+id/employeeHomeFragment"
@@ -19,6 +18,14 @@
         android:id="@+id/employerHomeFragment"
         android:name="com.example.homepage.EmployerHomeFragment"
         android:label="Employer Home" />
+
+    <action
+        android:id="@+id/action_home_to_home_employee"
+        app:destination="@id/editEmployeeProfileFragment" />
+
+    <action
+        android:id="@+id/action_home_to_home_employer"
+        app:destination="@id/editEmployerProfileFragment" />
 
     <fragment
         android:id="@+id/profileFragment"
@@ -44,12 +51,6 @@
         android:id="@+id/trainingFragment"
         android:name="com.example.training.TrainingFragment"
         android:label="Training" />
-
-    <!-- Add PostsFragment (the "other page" where posts can be created) -->
-    <fragment
-        android:id="@+id/postsFragment"
-        android:name="com.example.homepage.PostFragment"
-        android:label="Posts" />
 
     <action
         android:id="@+id/action_profile_to_edit_employee"

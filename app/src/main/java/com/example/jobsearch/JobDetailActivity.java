@@ -1,12 +1,16 @@
 package com.example.jobsearch;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.AppDatabase;
 import com.example.chatlist.ChatBox;
 import com.example.madproject.R;
 import com.google.android.material.button.MaterialButton;
@@ -21,6 +25,7 @@ public class JobDetailActivity extends AppCompatActivity {
     public static final String EXTRA_COMPANY = "company";
 
     private String companyName;
+    private int jobId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,23 @@ public class JobDetailActivity extends AppCompatActivity {
         TextView tvDistance = findViewById(R.id.tvDistance);
         TextView tvScore = findViewById(R.id.tvMatchScore);
 
+        MaterialButton btnChatEmployer = findViewById(R.id.btnChatEmployer);
+        MaterialButton btnDeleteEmployer = findViewById(R.id.btnDeleteEmployer);
+
+        // Hide delete button by default
+        btnDeleteEmployer.setVisibility(View.GONE);
+
+        // -------------------------------
+        // Check user type from SharedPreferences
+        // -------------------------------
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String userType = prefs.getString("user_type", "employee"); // default to employee
+
+        // Only show delete button for employers
+        if ("employer".equalsIgnoreCase(userType)) {
+            btnDeleteEmployer.setVisibility(View.VISIBLE);
+        }
+
         Intent intent = getIntent();
         if (intent != null) {
             tvTitle.setText(intent.getStringExtra(EXTRA_TITLE));
@@ -47,14 +69,31 @@ public class JobDetailActivity extends AppCompatActivity {
             tvScore.setText(intent.getStringExtra(EXTRA_SCORE));
 
             companyName = intent.getStringExtra(EXTRA_COMPANY);
+            jobId = intent.getIntExtra("job_id", -1);
         }
 
-        MaterialButton btnGoToDetail = findViewById(R.id.btnChatEmployer);
-        btnGoToDetail.setOnClickListener(v -> {
+        btnChatEmployer.setOnClickListener(v -> {
             if (companyName != null) {
-                Intent intent2 = new Intent(JobDetailActivity.this, ChatBox.class);
-                intent2.putExtra("company_name", companyName);
-                startActivity(intent2);
+                Intent chatIntent = new Intent(JobDetailActivity.this, ChatBox.class);
+                chatIntent.putExtra("company_name", companyName);
+                startActivity(chatIntent);
+            }
+        });
+
+        btnDeleteEmployer.setOnClickListener(v -> {
+            if (jobId != -1) {
+                new Thread(() -> {
+                    AppDatabase db = AppDatabase.getDatabase(JobDetailActivity.this);
+                    db.jobDao().deleteJobById(jobId);
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(JobDetailActivity.this,
+                                "Job deleted successfully", Toast.LENGTH_SHORT).show();
+                        finish(); // close after deletion
+                    });
+                }).start();
+            } else {
+                Toast.makeText(this, "Cannot delete this job", Toast.LENGTH_SHORT).show();
             }
         });
     }

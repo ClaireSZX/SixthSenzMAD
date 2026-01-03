@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment {
                     prefs.edit()
                             .putString("user_type", user.getUserType())
                             .putString("user_email", user.email)
+                            .putInt("user_id", user.id)
                             .apply();
 
                     Toast.makeText(getContext(),
