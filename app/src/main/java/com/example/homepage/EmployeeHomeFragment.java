@@ -89,44 +89,56 @@ public class EmployeeHomeFragment extends Fragment {
 
     // --- Load Jobs ---
     private void loadJobsFromDatabase() {
-        AppDatabase db = AppDatabase.getDatabase(getContext());
+        AppDatabase db = AppDatabase.getDatabase(requireContext());
+
         new Thread(() -> {
             List<Job> dbJobs = db.jobDao().getAllJobs();
-            getActivity().runOnUiThread(() -> {
-                jobList.clear();
-                jobList.addAll(dbJobs);
-                jobAdapter.notifyDataSetChanged();
 
-                emptyJobsText.setVisibility(jobList.isEmpty() ? View.VISIBLE : View.GONE);
-                recyclerJobs.setVisibility(jobList.isEmpty() ? View.GONE : View.VISIBLE);
-            });
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> {
+                    jobList.clear();
+                    jobList.addAll(dbJobs);
+                    jobAdapter.notifyDataSetChanged();
+
+                    emptyJobsText.setVisibility(jobList.isEmpty() ? View.VISIBLE : View.GONE);
+                    recyclerJobs.setVisibility(jobList.isEmpty() ? View.GONE : View.VISIBLE);
+                });
+            }
         }).start();
     }
 
+
     // --- Load Companies from Jobs ---
     private void loadCompaniesFromJobs() {
-        AppDatabase db = AppDatabase.getDatabase(getContext());
+        AppDatabase db = AppDatabase.getDatabase(requireContext());
+
         new Thread(() -> {
             List<Job> dbJobs = db.jobDao().getAllJobs();
             Set<String> seenCompanies = new HashSet<>();
             List<Job> uniqueCompanies = new ArrayList<>();
 
             for (Job job : dbJobs) {
-                String companyName = job.getCompany(); // must exist in Job class
-                if (!seenCompanies.contains(companyName)) {
-                    seenCompanies.add(companyName);
-                    uniqueCompanies.add(job); // keep one job per company for display
+                if (job.getCompany() != null && !seenCompanies.contains(job.getCompany())) {
+                    seenCompanies.add(job.getCompany());
+                    uniqueCompanies.add(job);
                 }
             }
 
-            getActivity().runOnUiThread(() -> {
-                companyList.clear();
-                companyList.addAll(uniqueCompanies);
-                companyAdapter.notifyDataSetChanged();
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> {
+                    companyList.clear();
+                    companyList.addAll(uniqueCompanies);
+                    companyAdapter.notifyDataSetChanged();
 
-                emptyCompaniesText.setVisibility(companyList.isEmpty() ? View.VISIBLE : View.GONE);
-                recyclerCompanies.setVisibility(companyList.isEmpty() ? View.GONE : View.VISIBLE);
-            });
+                    emptyCompaniesText.setVisibility(
+                            companyList.isEmpty() ? View.VISIBLE : View.GONE
+                    );
+                    recyclerCompanies.setVisibility(
+                            companyList.isEmpty() ? View.GONE : View.VISIBLE
+                    );
+                });
+            }
         }).start();
     }
+
 }

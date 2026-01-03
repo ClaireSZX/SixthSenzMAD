@@ -43,22 +43,46 @@ public class AppActivity extends AppCompatActivity {
 
             if (db.jobDao().getCount() == 0) {
                 User e1 = new User();
-                e1.userType = "Employer";
-                e1.email = "alice@tan.com";
+                e1.userType = "employer";
+                e1.email = "alice@gmail.com";
                 e1.companyName = "Tan Cleaning Services";
+                e1.password = "123";
                 db.userDao().insert(e1); // capture auto-generated ID
 
                 User e2 = new User();
-                e2.userType = "Employer";
-                e2.email = "bob@lee.com";
-                e2.companyName = "Lee Construction";
+                e2.userType = "employer";
+                e2.email = "bob@gmail.com";
+                e2.companyName = "Bobby Construction";
+                e2.password = "123";
                 db.userDao().insert(e2);
 
                 User e3 = new User();
-                e3.userType = "Employer";
-                e3.email = "catherine@ong.com";
-                e3.companyName = "Ong Catering";
+                e3.userType = "employer";
+                e3.email = "catherine@gmail.com";
+                e3.companyName = "Homecook Catering";
+                e3.password = "123";
                 db.userDao().insert(e3);
+
+                User e4 = new User();
+                e4.userType = "employee";
+                e4.email = "abu@gmail.com";
+                e4.fullName = "Abu bin Ali";
+                e4.password = "123";
+                db.userDao().insert(e4);
+
+                User e5 = new User();
+                e5.userType = "employee";
+                e5.email = "sam@gmail.com";
+                e5.fullName = "Sam Chin";
+                e5.password = "123";
+                db.userDao().insert(e5);
+
+                User e6 = new User();
+                e6.userType = "employee";
+                e6.email = "siti@gmail.com";
+                e6.fullName = "Siti binti Ahmad";
+                e6.password = "123";
+                db.userDao().insert(e6);
             }
 
 

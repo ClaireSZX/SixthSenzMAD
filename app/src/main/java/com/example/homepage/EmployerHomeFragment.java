@@ -1,100 +1,138 @@
 package com.example.homepage;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AppDatabase;
 import com.example.jobsearch.Job;
-import com.example.madproject.ItemRecommendation;
 import com.example.jobsearch.JobDetailActivity;
+import com.example.madproject.ItemRecommendation;
 import com.example.madproject.R;
+import com.example.madproject.User;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class EmployerHomeFragment extends Fragment {
 
-    private RecyclerView recyclerJobs, recyclerCompanies;
-    private TextView emptyJobsText, emptyCompaniesText;
-    private ItemRecommendation jobAdapter;
-    private CompanyAdapter companyAdapter;
-    private List<Job> jobList = new ArrayList<>();
-    private List<Job> companyList = new ArrayList<>(); // use Job objects for companies
+    private RecyclerView recyclerJobs, recyclerEmployees;
+    private TextView emptyJobsText, emptyEmployeesText;
 
-    public EmployerHomeFragment() { }
+    private ItemRecommendation jobAdapter;
+    private EmployeeAdapter employeeAdapter;
+
+    private final List<Job> jobList = new ArrayList<>();
+    private final List<User> employeeList = new ArrayList<>();
+
+    private int employerId = -1;
+
+    public EmployerHomeFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         View view = inflater.inflate(R.layout.employer_fragment_home, container, false);
 
-        // --- RecyclerViews and Empty TextViews ---
+        // ----------------------------
+        // Get employer ID
+        // ----------------------------
+        SharedPreferences prefs =
+                requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
+
+        employerId = prefs.getInt("user_id", -1);
+
+        // ----------------------------
+        // Views
+        // ----------------------------
         emptyJobsText = view.findViewById(R.id.textEmpty);
         recyclerJobs = view.findViewById(R.id.recyclerJobs);
 
-        emptyCompaniesText = view.findViewById(R.id.textEmpty2);
-        recyclerCompanies = view.findViewById(R.id.recyclerCompanies);
+        emptyEmployeesText = view.findViewById(R.id.textEmpty2);
+        recyclerEmployees = view.findViewById(R.id.recyclerCompanies);
 
-        // --- LayoutManagers ---
-        recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
+        recyclerJobs.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
 
-        recyclerCompanies.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
+        recyclerEmployees.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
 
-        // --- Adapters ---
+        // ----------------------------
+        // Job Adapter (Employer's jobs)
+        // ----------------------------
         jobAdapter = new ItemRecommendation(jobList, job -> {
-            Intent intent = new Intent(getActivity(), JobDetailActivity.class);
-
-            // Pass all job fields exactly as your JobDetailActivity expects
-            intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.title);
-            intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.company);
-            intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.industry);
-            intent.putExtra(JobDetailActivity.EXTRA_PAY, job.payRate);
-            intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.distance);
-            intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.matchScore);
-
+            Intent intent = new Intent(requireContext(), JobDetailActivity.class);
+            intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.getTitle());
+            intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.getCompany());
+            intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.getIndustry());
+            intent.putExtra(JobDetailActivity.EXTRA_PAY, job.getPayRate());
+            intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.getDistance());
+            intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.getMatchScore());
+            intent.putExtra("job_id", job.id);
             startActivity(intent);
         });
+
         recyclerJobs.setAdapter(jobAdapter);
 
-        companyAdapter = new CompanyAdapter(companyList);
-        recyclerCompanies.setAdapter(companyAdapter);
-
-        // --- Load Data ---
-        loadJobsFromDatabase();
-        loadCompaniesFromJobs();
-
-        // --- Button to Job Search ---
-        Button btnGoToSearch = view.findViewById(R.id.btnGoToSearch);
-        btnGoToSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.jobsearch.JobSearchActivity.class);
-            startActivity(intent);
+        // ----------------------------
+        // Employee Adapter (Potential employees)
+        // ----------------------------
+        employeeAdapter = new EmployeeAdapter(employeeList, employee -> {
+            // Intentionally empty for now
+            // Hook this to profile / chat later
         });
+
+        recyclerEmployees.setAdapter(employeeAdapter);
+
+        // ----------------------------
+        // Load data
+        // ----------------------------
+        loadEmployerJobs();
+        loadEmployees();
 
         return view;
     }
 
-    // --- Load Jobs ---
-    private void loadJobsFromDatabase() {
-        AppDatabase db = AppDatabase.getDatabase(getContext());
+    // ============================================================
+    // Jobs posted by THIS employer
+    // ============================================================
+    private void loadEmployerJobs() {
+        AppDatabase db = AppDatabase.getDatabase(requireContext());
+
         new Thread(() -> {
-            List<Job> dbJobs = db.jobDao().getAllJobs();
-            getActivity().runOnUiThread(() -> {
+            // 1️⃣ Get all jobs
+            List<Job> allJobs = db.jobDao().getAllJobs();
+
+            // 2️⃣ Filter jobs posted by this employer
+            List<Job> employerJobs = new ArrayList<>();
+            for (Job job : allJobs) {
+                if (job.getEmployerId() == employerId) {
+                    employerJobs.add(job);
+                }
+            }
+
+            // 3️⃣ Update UI
+            if (!isAdded()) return;
+
+            requireActivity().runOnUiThread(() -> {
                 jobList.clear();
-                jobList.addAll(dbJobs);
+                jobList.addAll(employerJobs);
                 jobAdapter.notifyDataSetChanged();
 
                 emptyJobsText.setVisibility(jobList.isEmpty() ? View.VISIBLE : View.GONE);
@@ -103,30 +141,42 @@ public class EmployerHomeFragment extends Fragment {
         }).start();
     }
 
-    // --- Load Companies from Jobs ---
-    private void loadCompaniesFromJobs() {
-        AppDatabase db = AppDatabase.getDatabase(getContext());
-        new Thread(() -> {
-            List<Job> dbJobs = db.jobDao().getAllJobs();
-            Set<String> seenCompanies = new HashSet<>();
-            List<Job> uniqueCompanies = new ArrayList<>();
 
-            for (Job job : dbJobs) {
-                String companyName = job.getCompany(); // must exist in Job class
-                if (!seenCompanies.contains(companyName)) {
-                    seenCompanies.add(companyName);
-                    uniqueCompanies.add(job); // keep one job per company for display
-                }
+    // ============================================================
+    // Potential employees
+    // ============================================================
+    private void loadEmployees() {
+        AppDatabase db = AppDatabase.getDatabase(requireContext());
+
+        new Thread(() -> {
+            List<User> users = db.userDao().getAllUsers();
+            List<User> employees = new ArrayList<>();
+
+            for (User user : users) {
+                if ("employee".equalsIgnoreCase(user.userType))
+                { employees.add(user); }
             }
 
-            getActivity().runOnUiThread(() -> {
-                companyList.clear();
-                companyList.addAll(uniqueCompanies);
-                companyAdapter.notifyDataSetChanged();
+            if (!isAdded()) return;
 
-                emptyCompaniesText.setVisibility(companyList.isEmpty() ? View.VISIBLE : View.GONE);
-                recyclerCompanies.setVisibility(companyList.isEmpty() ? View.GONE : View.VISIBLE);
+            requireActivity().runOnUiThread(() -> {
+                employeeList.clear();
+                employeeList.addAll(employees);
+                employeeAdapter.notifyDataSetChanged();
+
+                emptyEmployeesText.setVisibility(
+                        employeeList.isEmpty() ? View.VISIBLE : View.GONE
+                );
+                recyclerEmployees.setVisibility(
+                        employeeList.isEmpty() ? View.GONE : View.VISIBLE
+                );
             });
         }).start();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadEmployerJobs(); // reload the jobs from database
     }
 }

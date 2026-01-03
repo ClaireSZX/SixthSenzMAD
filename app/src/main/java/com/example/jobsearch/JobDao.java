@@ -23,4 +23,8 @@ public interface JobDao {
 
     @Query("SELECT COUNT(*) FROM job")
     int getCount();
+
+    @Query("DELETE FROM Job WHERE id = :jobId")
+    void deleteJobById(int jobId);
+
 }

@@ -59,6 +59,7 @@
         android:tint="#FFFFFF"
         app:itemTextColor="#FFFFFF"
         app:labelVisibilityMode="selected"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@null"/>
 
 </LinearLayout>

@@ -41,4 +41,5 @@ public class Job {
     public String getPayRate() { return payRate; }
     public String getDistance() { return distance; }
     public String getMatchScore() { return matchScore; }
+    public int getEmployerId() { return employerId; }
 }
