@@ -1,13 +1,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph_home"
-    app:startDestination="@id/HomeFragment">
+    app:startDestination="@id/homeFragment">
 
 
     <fragment
-        android:id="@+id/HomeFragment"
+        android:id="@+id/homeFragment"
         android:name="com.example.homepage.HomeFragment"
-        android:label="Home Fragment" />
+        android:label="HomeFragment" />
 
     <fragment
         android:id="@+id/employeeHomeFragment"

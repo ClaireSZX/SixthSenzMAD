@@ -2,7 +2,6 @@ package com.example.madproject;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -62,7 +61,7 @@ public class LoginFragment extends Fragment {
 
                 getActivity().runOnUiThread(() -> {
 
-                    if (user == null || !user.password.equals(password)) {
+                    if (user == null || user.password == null || !user.password.equals(password)) {
                         Toast.makeText(getContext(),
                                 "Invalid email or password",
                                 Toast.LENGTH_SHORT).show();
