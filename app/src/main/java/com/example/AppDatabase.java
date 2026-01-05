@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 // entities 数组里列出所有的表，version 是数据库版本号，每次修改表结构都需要增加版本号
 @Database(
         entities = {User.class, Job.class, ForumPost.class, Comment.class, Course.class},
-        version = 8, // increment version to force re-creation
+        version = 10, // increment version to force re-creation
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
