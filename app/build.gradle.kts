@@ -6,22 +6,15 @@ val nav_version = "2.5.3"
 val room_version = "2.6.1"
 
 android {
-    namespace = "com.example.homepage"
-    compileSdk {
-        version = release(36)
-    }
     namespace = "com.example.madproject"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.homepage"
         applicationId = "com.example.madproject"
         minSdk = 24
         targetSdk = 36
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -34,35 +27,32 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    // This part is important for XML ViewBinding
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)
-    implementation(libs.play.services.maps)
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.mlkit:translate:17.0.1")
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
 
-    // Dependencies for Navigation Component
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
-
+    // Room
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version") // 这是代码生成器
-}
+    annotationProcessor("androidx.room:room-compiler:$room_version") // ✅ Kotlin DSL syntax for Java
 
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}

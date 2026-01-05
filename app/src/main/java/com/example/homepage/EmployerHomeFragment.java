@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -106,6 +107,12 @@ public class EmployerHomeFragment extends Fragment {
         loadEmployerJobs();
         loadEmployees();
 
+
+        Button btnPostJobs = view.findViewById(R.id.btnPostJobs);
+        btnPostJobs.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), com.example.jobposting.AddJobActivity.class);
+            startActivity(intent);
+        });
         return view;
     }
 

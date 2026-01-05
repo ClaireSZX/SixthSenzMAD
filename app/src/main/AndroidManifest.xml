@@ -55,6 +55,12 @@
         <activity
             android:name="com.example.jobsearch.JobDetailActivity"
             android:exported="true" />
+        <activity
+            android:name="com.example.jobposting.AddJobActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.jobposting.MainActivity"
+            android:exported="true" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

@@ -48,11 +48,14 @@ public class JobAdaptor extends RecyclerView.Adapter<JobAdaptor.JobViewHolder>
         holder.tvCompany.setText(job.getCompany());
         holder.tvCategory.setText(job.getIndustry());
         holder.tvPayRate.setText(job.getPayRate());
-        holder.tvDistance.setText(job.getDistance());
-        holder.tvMatchScore.setText(job.getMatchScore());
+
+        // Convert numeric values to string before setting text
+        holder.tvDistance.setText(String.format("%.1f km", job.getDistance())); // assuming distance is double
+        holder.tvMatchScore.setText(String.format("%s%%", job.getMatchScore())); // assuming matchScore is string or int
 
         holder.itemView.setOnClickListener(v -> listener.onJobClick(job));
     }
+
 
     @Override
     public int getItemCount() {

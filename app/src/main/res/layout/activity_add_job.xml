@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/brand_navy_blue"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Add Job" />
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:hint="Job Title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+    <EditText
+        android:id="@+id/etCompany"
+        android:hint="Company Name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:hint="Job Description"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+    <EditText
+        android:id="@+id/etLocation"
+        android:hint="Job Location"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+    <EditText
+        android:id="@+id/etIndustry"
+        android:hint="Job Industry"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+
+    <EditText
+        android:id="@+id/etSkills"
+        android:hint="Job Skills"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+
+    <EditText
+        android:id="@+id/etPayRate"
+        android:hint="Job Pay Rate per hour"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="57dp"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/brand_navy_blue"
+        android:text="Save Job"
+        android:textSize="30dp" />
+</LinearLayout>
