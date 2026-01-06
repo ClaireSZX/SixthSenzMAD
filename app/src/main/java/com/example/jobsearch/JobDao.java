@@ -18,8 +18,8 @@ public interface JobDao {
     @Query("SELECT * FROM job")
     List<Job> getAllJobs();
 
-    @Query("SELECT * FROM Job WHERE title = :title LIMIT 1")
-    Job getJobByTitle(String title);
+    @Query("SELECT * FROM Job WHERE id = :jobId LIMIT 1")
+    Job getJobById(int jobId);
 
     @Query("SELECT COUNT(*) FROM job")
     int getCount();

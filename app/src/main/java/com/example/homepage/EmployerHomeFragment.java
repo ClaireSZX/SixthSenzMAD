@@ -79,12 +79,6 @@ public class EmployerHomeFragment extends Fragment {
         // ----------------------------
         jobAdapter = new ItemRecommendation(jobList, job -> {
             Intent intent = new Intent(requireContext(), JobDetailActivity.class);
-            intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.getTitle());
-            intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.getCompany());
-            intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.getIndustry());
-            intent.putExtra(JobDetailActivity.EXTRA_PAY, job.getPayRate());
-            intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.getDistance());
-            intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.getMatchScore());
             intent.putExtra("job_id", job.id);
             startActivity(intent);
         });

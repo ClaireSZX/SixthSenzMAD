@@ -28,7 +28,6 @@ public class JobSearchActivity extends AppCompatActivity {
 
         SearchView searchView = findViewById(R.id.searchView);
         RecyclerView recyclerView = findViewById(R.id.rvRecommendedJobs);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         AppDatabase db = AppDatabase.getDatabase(this);
@@ -37,16 +36,10 @@ public class JobSearchActivity extends AppCompatActivity {
             List<Job> jobList = db.jobDao().getAllJobs();
 
             runOnUiThread(() -> {
+                // Pass only jobId to JobDetailActivity
                 adapter = new JobAdaptor(jobList, job -> {
                     Intent intent = new Intent(this, JobDetailActivity.class);
-
-                    intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.getTitle());
-                    intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.getCompany());
-                    intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.getIndustry());
-                    intent.putExtra(JobDetailActivity.EXTRA_PAY, job.getPayRate());
-                    intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.getDistance());
-                    intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.getMatchScore());
-
+                    intent.putExtra(JobDetailActivity.EXTRA_JOB_ID, job.id); // only jobId
                     startActivity(intent);
                 });
 
