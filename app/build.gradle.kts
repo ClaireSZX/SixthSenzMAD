@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 val nav_version = "2.5.3"
@@ -9,13 +10,18 @@ android {
     namespace = "com.example.madproject"
     compileSdk = 36
 
-    defaultConfig {
-        applicationId = "com.example.madproject"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    android {
+        defaultConfig {
+            applicationId = "com.example.madproject"
+            minSdk = 24
+            targetSdk = 36
+            versionCode = 1
+            versionName = "1.0"
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            val mapsApiKey: String? by project
+            buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+
+        }
     }
 
     buildTypes {
@@ -35,6 +41,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

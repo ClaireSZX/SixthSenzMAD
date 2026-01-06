@@ -76,45 +76,46 @@ public class AppActivity extends AppCompatActivity {
             if (db.jobDao().getCount() == 0) {
                 List<Job> sampleJobs = new ArrayList<>();
 
-                sampleJobs.add(new Job("Construction Helper", "Lee Construction", "Kuala Lumpur",
+                sampleJobs.add(new Job("Construction Helper", "Lee Construction", "Jalan Tun Razak, Kuala Lumpur",
                         "Construction", "Manual labor", "Assist with basic construction tasks, lifting, and site preparation",
                         "RM 80/Day", 0, 0, 2));
 
-                sampleJobs.add(new Job("Home Cleaner", "Tan Cleaning Services", "Petaling Jaya",
+                sampleJobs.add(new Job("Home Cleaner", "Tan Cleaning Services", "Jalan SS2/72, Petaling Jaya",
                         "Domestic", "Cleaning", "Perform general home cleaning, dusting, and floor maintenance",
                         "RM 50/Day", 0, 0, 1));
 
-                sampleJobs.add(new Job("Cook", "Ong Catering", "Subang",
+                sampleJobs.add(new Job("Cook", "Ong Catering", "Jalan USJ 1/1, Subang Jaya",
                         "Food Service", "Customer Service", "Prepare meals according to recipes, maintain kitchen hygiene",
                         "RM 60/Day", 0, 0, 3));
 
-                sampleJobs.add(new Job("Gardener", "Tan Cleaning Services", "Kuala Lumpur",
+                sampleJobs.add(new Job("Gardener", "Tan Cleaning Services", "Bukit Tunku, Kuala Lumpur",
                         "Domestic", "Gardening", "Plant, water, and maintain gardens and outdoor plants",
                         "RM 55/Day", 0, 0, 1));
 
-                sampleJobs.add(new Job("Plumber Assistant", "Lee Construction", "Petaling Jaya",
+                sampleJobs.add(new Job("Plumber Assistant", "Lee Construction", "Jalan SS5/8, Petaling Jaya",
                         "Construction", "Plumbing", "Assist in plumbing installations and repairs under supervision",
                         "RM 85/Day", 0, 0, 2));
 
-                sampleJobs.add(new Job("Event Caterer", "Ong Catering", "Kuala Lumpur",
+                sampleJobs.add(new Job("Event Caterer", "Ong Catering", "Jalan Raja Chulan, Kuala Lumpur",
                         "Food Service", "Cooking & Serving", "Help with food preparation, serving guests, and cleaning up",
                         "RM 70/Day", 0, 0, 3));
 
-                sampleJobs.add(new Job("Window Cleaner", "Tan Cleaning Services", "Shah Alam",
+                sampleJobs.add(new Job("Window Cleaner", "Tan Cleaning Services", "Seksyen 7, Shah Alam",
                         "Domestic", "Cleaning", "Clean windows and glass surfaces efficiently and safely",
                         "RM 45/Day", 0, 0, 1));
 
-                sampleJobs.add(new Job("Carpentry Helper", "Lee Construction", "Subang",
+                sampleJobs.add(new Job("Carpentry Helper", "Lee Construction", "Jalan USJ 10/1, Subang Jaya",
                         "Construction", "Carpentry", "Assist carpenters in cutting, assembling, and finishing wood projects",
                         "RM 90/Day", 0, 0, 2));
 
-                sampleJobs.add(new Job("Kitchen Assistant", "Ong Catering", "Petaling Jaya",
+                sampleJobs.add(new Job("Kitchen Assistant", "Ong Catering", "Jalan SS2/6, Petaling Jaya",
                         "Food Service", "Cooking & Prep", "Support chefs in meal prep, chopping ingredients, and cleaning kitchen",
                         "RM 65/Day", 0, 0, 3));
 
-                sampleJobs.add(new Job("Laundry Worker", "Tan Cleaning Services", "Kuala Lumpur",
+                sampleJobs.add(new Job("Laundry Worker", "Tan Cleaning Services", "Jalan Bukit Bintang, Kuala Lumpur",
                         "Domestic", "Laundry & Cleaning", "Wash, dry, fold, and organize laundry for clients",
                         "RM 50/Day", 0, 0, 1));
+
 
 
                 // Calculate distance & match score

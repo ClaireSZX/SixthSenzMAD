@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,33 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADProject">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_api_key" />
+
         <!-- Launcher Activity: Signup -->
         <activity
             android:name=".AppActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Main/Home Activity -->
+        </activity> <!-- Main/Home Activity -->
         <activity
             android:name="com.example.homepage.MainActivity"
             android:exported="true" />
-
         <activity
             android:name="com.example.chatlist.ChatBox"
             android:exported="true" />
-
         <activity
             android:name="com.example.chatlist.adminChat"
             android:exported="true" />
-
         <activity
             android:name="com.example.training.ActivityCourseDetail"
             android:exported="true" />
-
         <activity
             android:name="com.example.training.ForumActivity"
             android:exported="true" />
@@ -62,7 +63,5 @@
             android:name="com.example.jobposting.MainActivity"
             android:exported="true" />
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

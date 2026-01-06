@@ -33,26 +33,44 @@ public class JobSearchActivity extends AppCompatActivity {
 
         AppDatabase db = AppDatabase.getDatabase(this);
 
+        // Attach map fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.map_container, new MapsFragment())
+                    .commit();
+        }
+
         new Thread(() -> {
             List<Job> jobList = db.jobDao().getAllJobs();
 
             runOnUiThread(() -> {
+
+                // RecyclerView
                 adapter = new JobAdaptor(jobList, job -> {
                     Intent intent = new Intent(this, JobDetailActivity.class);
-
                     intent.putExtra(JobDetailActivity.EXTRA_TITLE, job.getTitle());
                     intent.putExtra(JobDetailActivity.EXTRA_COMPANY, job.getCompany());
                     intent.putExtra(JobDetailActivity.EXTRA_CATEGORY, job.getIndustry());
                     intent.putExtra(JobDetailActivity.EXTRA_PAY, job.getPayRate());
                     intent.putExtra(JobDetailActivity.EXTRA_DISTANCE, job.getDistance());
                     intent.putExtra(JobDetailActivity.EXTRA_SCORE, job.getMatchScore());
-
                     startActivity(intent);
                 });
 
                 recyclerView.setAdapter(adapter);
+
+                // 🔥 SEND JOBS TO MAP
+                MapsFragment mapFragment =
+                        (MapsFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.map_container);
+
+                if (mapFragment != null) {
+                    mapFragment.setJobs(jobList);
+                }
             });
         }).start();
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

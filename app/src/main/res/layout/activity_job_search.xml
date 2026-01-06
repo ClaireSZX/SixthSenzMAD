@@ -8,10 +8,12 @@
 
 
     <!-- Map Fragment -->
-    <FrameLayout
-        android:id="@+id/mapContainer"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:defaultNavHost="false"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
 
     <!-- Top Search and Filter Section -->
     <LinearLayout
