@@ -17,20 +17,17 @@ import com.google.android.material.button.MaterialButton;
 
 public class JobDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_TITLE = "title";
-    public static final String EXTRA_CATEGORY = "category";
-    public static final String EXTRA_PAY = "pay";
-    public static final String EXTRA_DISTANCE = "distance";
-    public static final String EXTRA_SCORE = "score";
-    public static final String EXTRA_COMPANY = "company";
     public static final String EXTRA_JOB_ID = "job_id";
-    public static final String EXTRA_EMPLOYER_ID = "employer_id";
 
-    public static final String EXTRA_DESCRIPTION = "description";
-
-    private String companyName;
     private int jobId = -1;
     private int employerId = -1;
+    private String companyName;
+
+    // Views
+    private TextView tvTitle, tvCompany, tvCategory, tvPay,
+            tvDistance, tvScore, tvDescription;
+
+    private MaterialButton btnChatEmployer, btnDeleteEmployer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,69 +43,81 @@ public class JobDetailActivity extends AppCompatActivity {
         // -------------------
         // Views
         // -------------------
-        TextView tvTitle = findViewById(R.id.tvJobTitle);
-        TextView tvCompany = findViewById(R.id.tvJobCompany);
-        TextView tvCategory = findViewById(R.id.tvCategory);
-        TextView tvPay = findViewById(R.id.tvPayRate);
-        TextView tvDistance = findViewById(R.id.tvDistance);
-        TextView tvScore = findViewById(R.id.tvMatchScore);
-        TextView tvDescription = findViewById(R.id.tvDescription);
+        tvTitle = findViewById(R.id.tvJobTitle);
+        tvCompany = findViewById(R.id.tvJobCompany);
+        tvCategory = findViewById(R.id.tvCategory);
+        tvPay = findViewById(R.id.tvPayRate);
+        tvDistance = findViewById(R.id.tvDistance);
+        tvScore = findViewById(R.id.tvMatchScore);
+        tvDescription = findViewById(R.id.tvDescription);
 
-
-        MaterialButton btnChatEmployer = findViewById(R.id.btnChatEmployer);
-        MaterialButton btnDeleteEmployer = findViewById(R.id.btnDeleteEmployer);
-
-        // Hide delete button by default
+        btnChatEmployer = findViewById(R.id.btnChatEmployer);
+        btnDeleteEmployer = findViewById(R.id.btnDeleteEmployer);
         btnDeleteEmployer.setVisibility(View.GONE);
 
         // -------------------
-        // Get logged-in user info
+        // Logged-in user
         // -------------------
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        String userType = prefs.getString("user_type", "employee"); // default
+        String userType = prefs.getString("user_type", "employee");
         int loggedInUserId = prefs.getInt("user_id", -1);
 
         // -------------------
-        // Get intent data
+        // Get jobId from intent
         // -------------------
-        Intent intent = getIntent();
-        if (intent != null) {
-            tvTitle.setText(intent.getStringExtra(EXTRA_TITLE));
-            tvCompany.setText(intent.getStringExtra(EXTRA_COMPANY));
-            tvCategory.setText(intent.getStringExtra(EXTRA_CATEGORY));
-            tvPay.setText(intent.getStringExtra(EXTRA_PAY));
+        jobId = getIntent().getIntExtra(EXTRA_JOB_ID, -1);
+        if (jobId == -1) {
+            Toast.makeText(this, "Invalid job", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-            tvDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+        // -------------------
+        // Load job from DB
+        // -------------------
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            Job job = db.jobDao().getJobById(jobId);
 
-
-            // Distance and match score might be numeric
-            double distance = intent.getDoubleExtra(EXTRA_DISTANCE, 0.0);
-            tvDistance.setText(String.format("%.1f km", distance));
-
-            String matchScore = intent.getStringExtra(EXTRA_SCORE);
-            if (matchScore == null || matchScore.isEmpty()) {
-                matchScore = "0%";
+            if (job == null) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Job not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+                return;
             }
-            tvScore.setText(matchScore);
 
-            companyName = intent.getStringExtra(EXTRA_COMPANY);
-            jobId = intent.getIntExtra(EXTRA_JOB_ID, -1);
-            employerId = intent.getIntExtra(EXTRA_EMPLOYER_ID, -1);
-        }
+            employerId = job.getEmployerId();
+            companyName = job.getCompany();
 
-        // -------------------
-        // Show delete only if logged-in employer owns this job
-        // -------------------
-        if ("employer".equalsIgnoreCase(userType) && loggedInUserId == employerId) {
-            btnDeleteEmployer.setVisibility(View.VISIBLE);
-        }
+            runOnUiThread(() -> {
+                tvTitle.setText(job.getTitle());
+                tvCompany.setText(job.getCompany());
+                tvCategory.setText(job.getIndustry());
+                tvPay.setText(job.getPayRate());
+                tvDescription.setText(job.getDescription());
+
+                tvDistance.setText(
+                        String.format("%.1f km", job.getDistance())
+                );
+
+                tvScore.setText(String.format("%.0f%%", job.getMatchScore()));
+
+
+                // Show delete if owner
+                if ("employer".equalsIgnoreCase(userType)
+                        && loggedInUserId == employerId) {
+                    btnDeleteEmployer.setVisibility(View.VISIBLE);
+                }
+            });
+        }).start();
 
         // -------------------
         // Chat with employer
         // -------------------
         btnChatEmployer.setOnClickListener(v -> {
             if (companyName != null) {
-                Intent chatIntent = new Intent(JobDetailActivity.this, ChatBox.class);
+                Intent chatIntent = new Intent(this, ChatBox.class);
                 chatIntent.putExtra("company_name", companyName);
                 startActivity(chatIntent);
             }
@@ -118,26 +127,17 @@ public class JobDetailActivity extends AppCompatActivity {
         // Delete job
         // -------------------
         btnDeleteEmployer.setOnClickListener(v -> {
-            if (jobId != -1) {
-                new Thread(() -> {
-                    AppDatabase db = AppDatabase.getDatabase(JobDetailActivity.this);
-                    db.jobDao().deleteJobById(jobId);
+            new Thread(() -> {
+                AppDatabase db = AppDatabase.getDatabase(this);
+                db.jobDao().deleteJobById(jobId);
 
-                    runOnUiThread(() -> {
-                        Toast.makeText(JobDetailActivity.this,
-                                "Job deleted successfully", Toast.LENGTH_SHORT).show();
-                        finish(); // close after deletion
-                    });
-                }).start();
-            } else {
-                Toast.makeText(this, "Cannot delete this job", Toast.LENGTH_SHORT).show();
-            }
+                runOnUiThread(() -> {
+                    Toast.makeText(this,
+                            "Job deleted successfully",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }).start();
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 }

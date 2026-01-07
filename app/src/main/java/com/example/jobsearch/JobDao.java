@@ -27,4 +27,8 @@ public interface JobDao {
     @Query("DELETE FROM Job WHERE id = :jobId")
     void deleteJobById(int jobId);
 
+    @Query("SELECT * FROM job WHERE id = :jobId LIMIT 1")
+    Job getJobById(int jobId);
+
+
 }
