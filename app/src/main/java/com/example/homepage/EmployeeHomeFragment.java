@@ -59,7 +59,7 @@ public class EmployeeHomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), JobDetailActivity.class);
 
             // Pass all job fields exactly as your JobDetailActivity expects
-            intent.putExtra("jobId", job.id);
+            intent.putExtra("job_id", job.id);
 
             startActivity(intent);
         });
